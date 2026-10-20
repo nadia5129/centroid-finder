@@ -20,7 +20,17 @@ A container that holds many items in order. Here it holds all the groups the pro
 import javax.imageio.ImageIO; -
 opens an image file and saves an image file. It loads your input picture and saves binarized.png
 
-
 TODO (nadia) line 57 -69
 TODO (paris) line 83- 100
+
+String inputImagePath = args[0];
+String hexTargetColor = args[1];
+int threshold = 0;
+
+This gives names to the first two arguments and declares a variable for the threshold. The image path selects the file the user wants to analyze, and the target color tells the program what color to look for in the image. The threshold is the value used to decide how close a pixel needs to be to that target color before it is counted as part of the selected object.
+
+threshold = Integer.parseInt(args[2]);
+
+The threshold arrives as text, so Integer.parseInt converts it to an integer. The try/catch handles input that is not a valid integer. On failure, the program prints an error and returns. The try block means "attempt this operation." If the conversion works, threshold gets the converted value and the program continues. If it does not work, it throws a NumberFormatException, and the catch block handles that problem by printing a clear message and stopping the program before it continues with invalid data.
+
 lines 71 -81 Code takes a picture, turns it into numbers, changes those numbers into a black and white picture, and saves it as a PNG file. If something goes wrong, it tells us there was a problem.
