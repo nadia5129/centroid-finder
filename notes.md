@@ -1,0 +1,3 @@
+This application takes three command-line arguments therefore we know what type of input to expect...
+
+read command-line inputs → load an image → turn it into black and white → find white-pixel groups → save the results.
