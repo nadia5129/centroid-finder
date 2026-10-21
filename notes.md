@@ -23,4 +23,4 @@ opens an image file and saves an image file. It loads your input picture and sav
 
 TODO (nadia) line 57 -69
 TODO (paris) line 83- 100
-TODO (jessica) line 71 -81
+lines 71 -81 Code takes a picture, turns it into numbers, changes those numbers into a black and white picture, and saves it as a PNG file. If something goes wrong, it tells us there was a problem.
