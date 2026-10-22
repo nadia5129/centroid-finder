@@ -27,8 +27,28 @@ public class DfsBinaryGroupFinderTest {
     // TODO tests to write (x = column, y = row):
     //
     // Basic cases
-    // [ ] all zeros -> empty list
+
+    // [x] all zeros -> empty list
+    @Test 
+    void findConnectedGroups_allZeros_returnsEmptyList() {
+        //Arrange
+        int[][] image = {
+            {0, 0, 0},
+            {0, 0, 0},
+            {0, 0, 0}
+        };
+        DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
+
+        //Act
+        List<Group> groups = finder.findConnectedGroups(image);
+
+        //Assert
+        List<Group> expected = List.of();
+        assertEquals(expected, groups);
+    }
+
     // [ ] all ones -> one group covering the whole image, centroid in the middle
+    @ Test
     // [ ] single pixel at (0, 0) -> top-left corner works
     // [ ] single pixel at the bottom-right corner -> edges don't go out of bounds
     // [ ] 1x1 image containing a 1
