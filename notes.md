@@ -83,7 +83,7 @@ EuclideanColorDistance.java - This class combines binarization and group finding
 
 DfsBinaryGroupFinder.java - This is the actual connected-component search algorithm that finds groups of white pixels.
 
-FLOW OF DATA : aka heart of project
+TODO - FLOW OF DATA : aka heart of project
 
 1.Input image is loaded
 2.Target color and threshold are read from the command line
