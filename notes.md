@@ -73,52 +73,67 @@ This opens groups.csv and writes one line per group. Each line is a summary of t
 
 CLASS RESPONSIBILITIES:
 
-ImageSummaryApp.java - The main program that collects input, loads the image, binarizes it, finds groups, and saves output
+ImageSummaryApp.java - This is the main driver of the whole program. It reads the arguments, loads the image, applies the target color logic, saves the binarized image, finds connected white groups, and writes the results to a CSV file.
 
-DistanceImageBinarizer.java - This is the class that decides whether each pixel is white or black based on distance from the target color.
+DistanceImageBinarizer.java - This class is responsible for turning the full-color image into a black-and-white image by comparing each pixel's color to the target color. It decides whether a pixel should be white or black based on the threshold.
 
-BinarizingImageGroupFinder.java - This class combines binarization and group finding into one workflow.
+BinarizingImageGroupFinder.java - This class connects the binarization step to the grouping step. It takes the image, turns it into a binary array, and then asks a group-finding algorithm to find connected white regions.
 
-EuclideanColorDistance.java - This class combines binarization and group finding into one workflow
+EuclideanColorDistance.java - This class calculates the distance between two RGB colors by using the Euclidean distance formula in 3D color space. It is the numerical way the program decides how similar a pixel is to the target color.
 
 DfsBinaryGroupFinder.java - This is the actual connected-component search algorithm that finds groups of white pixels.
 
-TODO - FLOW OF DATA : aka heart of project
+Group.java - This record stores a group's size and centroid. It also formats a group as a CSV row like "size,x,y".
 
-1.Input image is loaded
-2.Target color and threshold are read from the command line
-3.Each pixel is compared to the target color.
-4.Pixels under the threshold become white, others become black
-5.White pixels are grouped if they touch - up/down/left/right
-6.Each group is summarized as size and centroid
-7. Results are saved as a PNG and a CSV
+Coordinate.java - This record represents a location in the image using x and y values. The origin is the top-left pixel.
 
-TODO: Explain the interfaces
+FLOW OF DATA: the heart of the project
 
--ImageBinarizer.java
--ImageGroupFinder.java
--BinaryGroupFinder.java
--ColorDistanceFinder.java
+1. The program reads the input image path, target color, and threshold from the command line.
+2. It loads the image into a BufferedImage object so each pixel can be examined.
+3. It compares every pixel's color to the target color using Euclidean distance.
+4. If the distance is less than the threshold, the pixel is treated as white (1). Otherwise, it is black (0).
+5. The binary array is turned back into an image and saved as binarized.png.
+6. The white pixels are scanned to find connected groups using DFS. Pixels are connected only up, down, left, and right.
+7. Each group is summarized by size and centroid.
+8. The group information is written to groups.csv in CSV format.
 
-TODO: Meaning of output files
+Explain the interfaces
 
--what the sample input image probably represents
--what the sample output PNG is showing
--what the CSV rows mean
--how the output should match the expected shape/group data
+ImageBinarizer.java - This interface defines the contract for converting between a color image and a binary image. Any class that implements it must know how to turn an image into a 2D array of 0s and 1s and then turn that array back into an image.
 
-TODO: why this design?
--Why does the program use a target color and threshold instead of just checking for a specific color value?
--Why does it convert the image to binary first?
--Why does it then find connected groups instead of just counting pixels?
--Why does it save the result as CSV instead of only as an image?
+ImageGroupFinder.java - This interface defines the method for detecting connected groups in an image. Its purpose is to abstract away the exact group-finding algorithm.
 
-TODO: Short Glossary
-terms to define
--binary image
--threshold
--connected components
--centroid
--RGB
--Euclidean distance
--CSV
+BinaryGroupFinder.java - This interface defines how to find connected groups in a binary 2D array. It is focused on the image-processing logic rather than reading files or saving results.
+
+ColorDistanceFinder.java - This interface defines a way to compare two colors numerically. It lets the app swap in different distance formulas without changing the rest of the code.
+
+Meaning of the output files
+
+The sample input image contains a picture with visible shapes or blobs that should match a target color. The program uses the threshold to decide which pixels are close enough to that target color to count as the object of interest.
+
+The PNG output, binarized.png, is a black-and-white version of the image. White pixels represent the pixels that matched the target color closely enough, and black pixels represent everything else.
+
+The CSV output, groups.csv, contains one line per connected group. Each row has the format "size,x,y". The size tells how many pixels are in that group, and x and y are the centroid coordinates for the group center.
+
+This is useful because the image itself is visual, but the CSV file turns the result into structured data that can be read by spreadsheets or saved for analysis.
+
+Why this design?
+
+The program uses a target color and threshold instead of checking for one exact color value because real images may have small variations in lighting, shading, and noise. A threshold allows the program to tolerate slight differences in RGB values while still identifying the same object.
+
+It converts the image to binary first because once the image is reduced to 0s and 1s, connected groups are much easier to detect. This simplifies the problem from analyzing colors to analyzing shapes.
+
+It finds connected groups instead of just counting pixels because the image may contain multiple separate objects. Grouping connected white pixels lets the program identify each object as a separate region.
+
+It saves the results as CSV because the program is not only making an image; it is also summarizing the objects in a format that is compact, readable, and easy to analyze outside the program.
+
+Short Glossary
+
+Binary image - an image represented by only two values, usually 0 and 1, instead of many color values.
+Threshold - the cutoff value used to decide whether a pixel is close enough to a target color to be considered white.
+Connected components - groups of pixels that touch each other up, down, left, or right.
+Centroid - the center point of a group, calculated by averaging all pixel coordinates in the group.
+RGB - the red, green, and blue values that make up a color.
+Euclidean distance - the straight-line distance between two points in 3D color space.
+CSV - a file format where rows are separated by newlines and values are separated by commas.
