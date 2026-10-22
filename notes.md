@@ -2,6 +2,9 @@ This application takes three command-line arguments therefore we know what type 
 
 read command-line inputs → load an image → turn it into black and white → find white-pixel groups → save the results.
 
+CSV = Comma-Separated Values
+A CSV file is a plain text file that stores data in rows and columns.
+
 For args.length < 3 It checks if the user entered fewer than three arguments. If they did, the program prints a message showing how to run the application and stops running.
 
 The imports:
@@ -21,16 +24,48 @@ import javax.imageio.ImageIO; -
 opens an image file and saves an image file. It loads your input picture and saves binarized.png
 
 TODO (nadia) line 57 -69
-TODO (paris) line 83- 100 :
+
+This part is where the program reads the input values from the command line and stores them in variables so the rest of the code can use them. The code:
 
 String inputImagePath = args[0];
 String hexTargetColor = args[1];
 int threshold = 0;
 
-This gives names to the first two arguments and declares a variable for the threshold. The image path selects the file the user wants to analyze, and the target color tells the program what color to look for in the image. The threshold is the value used to decide how close a pixel needs to be to that target color before it is counted as part of the selected object.
+This gives names to the first two arguments and declares a variable for the threshold. The image path selects the file the user wants to analyze, and the target color tells the program what color to look for. The threshold is the value used to decide how close a pixel needs to be to that target color before it is counted as part of the selection.
+
+The code then tries to convert the third argument from text to an integer:
 
 threshold = Integer.parseInt(args[2]);
 
 The threshold arrives as text, so Integer.parseInt converts it to an integer. The try/catch handles input that is not a valid integer. On failure, the program prints an error and returns. The try block means "attempt this operation." If the conversion works, threshold gets the converted value and the program continues. If it does not work, it throws a NumberFormatException, and the catch block handles that problem by printing a clear message and stopping the program before it continues with invalid data.
 
-lines 71 -81 Code takes a picture, turns it into numbers, changes those numbers into a black and white picture, and saves it as a PNG file. If something goes wrong, it tells us there was a problem.
+TODO (jessica) line 71 -81
+
+This section is where the program actually turns the image into a black-and-white version. First, it calls:
+
+int[][] binaryArray = binarizer.toBinaryArray(inputImage);
+
+This creates a two-dimensional array where each pixel is converted to either 1 or 0 depending on whether it is close enough to the target color. Then it does:
+
+BufferedImage binaryImage = binarizer.toBufferedImage(binaryArray);
+
+This turns the binary array back into an image so the program can save it as a real PNG file. The try/catch around ImageIO.write checks whether the file was saved correctly. If something goes wrong, it prints an error message instead of crashing the whole program.
+
+TODO (paris) line 83-100
+
+These lines are the part where the program turns the processed image into meaningful group data. First, it creates a group-finder object:
+
+ImageGroupFinder groupFinder = new BinarizingImageGroupFinder(binarizer, new DfsBinaryGroupFinder());
+List<Group> groups = groupFinder.findConnectedGroups(inputImage);
+
+This tells the program to use the same binarization rules to decide which pixels are white, and then find connected groups of those white pixels using depth-first search. A connected group is a cluster of touching white pixels. The result is stored in a List<Group>, so each group can be analyzed separately.
+
+After that, the program writes those groups into a CSV file:
+
+try (PrintWriter writer = new PrintWriter("groups.csv")) {
+    for (Group group : groups) {
+        writer.println(group.toCsvRow());
+    }
+}
+
+This opens groups.csv and writes one line per group. Each line is a summary of that group, such as its size and centroid coordinates. This is important because the program is not only producing a binarized image; it is also converting the image data into a spreadsheet-friendly file that can be used for analysis or comparison.
