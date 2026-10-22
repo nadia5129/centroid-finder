@@ -92,3 +92,33 @@ FLOW OF DATA : aka heart of project
 5.White pixels are grouped if they touch - up/down/left/right
 6.Each group is summarized as size and centroid
 7. Results are saved as a PNG and a CSV
+
+TODO: Explain the interfaces
+
+-ImageBinarizer.java
+-ImageGroupFinder.java
+-BinaryGroupFinder.java
+-ColorDistanceFinder.java
+
+TODO: Meaning of output files
+
+-what the sample input image probably represents
+-what the sample output PNG is showing
+-what the CSV rows mean
+-how the output should match the expected shape/group data
+
+TODO: why this design?
+-Why does the program use a target color and threshold instead of just checking for a specific color value?
+-Why does it convert the image to binary first?
+-Why does it then find connected groups instead of just counting pixels?
+-Why does it save the result as CSV instead of only as an image?
+
+TODO: Short Glossary
+terms to define
+-binary image
+-threshold
+-connected components
+-centroid
+-RGB
+-Euclidean distance
+-CSV
