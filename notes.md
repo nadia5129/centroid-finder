@@ -69,3 +69,17 @@ try (PrintWriter writer = new PrintWriter("groups.csv")) {
 }
 
 This opens groups.csv and writes one line per group. Each line is a summary of that group, such as its size and centroid coordinates. This is important because the program is not only producing a binarized image; it is also converting the image data into a spreadsheet-friendly file that can be used for analysis or comparison.
+
+
+CLASS RESPONSIBILITIES:
+
+ImageSummaryApp.java - The main program that collects input, loads the image, binarizes it, finds groups, and saves output
+
+DistanceImageBinarizer.java - This is the class that decides whether each pixel is white or black based on distance from the target color.
+
+BinarizingImageGroupFinder.java - This class combines binarization and group finding into one workflow.
+
+EuclideanColorDistance.java - This class combines binarization and group finding into one workflow
+
+DfsBinaryGroupFinder.java - This is the actual connected-component search algorithm that finds groups of white pixels.
+
