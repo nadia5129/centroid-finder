@@ -39,7 +39,7 @@ threshold = Integer.parseInt(args[2]);
 
 The threshold arrives as text, so Integer.parseInt converts it to an integer. The try/catch handles input that is not a valid integer. On failure, the program prints an error and returns. The try block means "attempt this operation." If the conversion works, threshold gets the converted value and the program continues. If it does not work, it throws a NumberFormatException, and the catch block handles that problem by printing a clear message and stopping the program before it continues with invalid data.
 
-TODO (jessica) line 71 -81
+(jessica) line 71 -81
 
 This section is where the program actually turns the image into a black-and-white version. First, it calls:
 
@@ -51,7 +51,7 @@ BufferedImage binaryImage = binarizer.toBufferedImage(binaryArray);
 
 This turns the binary array back into an image so the program can save it as a real PNG file. The try/catch around ImageIO.write checks whether the file was saved correctly. If something goes wrong, it prints an error message instead of crashing the whole program.
 
-TODO (paris) line 83-100
+(paris) line 83-100
 
 These lines are the part where the program turns the processed image into meaningful group data. First, it creates a group-finder object:
 
