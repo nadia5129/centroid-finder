@@ -21,7 +21,7 @@ import javax.imageio.ImageIO; -
 opens an image file and saves an image file. It loads your input picture and saves binarized.png
 
 TODO (nadia) line 57 -69
-TODO (paris) line 83- 100
+TODO (paris) line 83- 100 :
 
 String inputImagePath = args[0];
 String hexTargetColor = args[1];
