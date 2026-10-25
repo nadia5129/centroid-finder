@@ -230,8 +230,28 @@ public class DfsBinaryGroupFinderTest {
         assertEquals(expected, groups);
     }
 
+    // [x] U-shape or snake -> one group (DFS goes back on itself)
 
-    // [ ] U-shape or snake -> one group (DFS goes back on itself)
+    @Test 
+    void findConnectedGroups_uShaped_returnsOneGroup() {
+        //Arrange
+        int[][] image = {
+            {1, 0, 1},
+            {1, 0, 1},
+            {1, 1, 1}
+        };
+        DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
+
+        //Act
+        List<Group> groups = finder.findConnectedGroups(image);
+
+        //Assert
+        List<Group> expected = List.of(
+            new Group(7, new Coordinate(1, 1))
+        );
+        assertEquals(expected, groups);
+    }
+
     // [ ] ring with a hole of 0s in the middle -> one group
     // [ ] two groups separated by a column of 0s
     //
