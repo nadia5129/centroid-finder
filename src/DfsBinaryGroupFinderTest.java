@@ -166,6 +166,25 @@ public class DfsBinaryGroupFinderTest {
     }
 
     // [ ] two pixels stacked (vertical) -> one group of size 2
+
+    @Test 
+    void findConnectedGroups_twoPixelsOnTop_returnsOneGroup() {
+        //Arrange
+        int[][] image = {
+            {0, 0, 0},
+            {0, 1, 0},
+            {0, 1, 0}
+        };
+        DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
+
+        //Act
+        List<Group> groups = finder.findConnectedGroups(image);
+
+        //Assert
+        List<Group> expected = List.of(new Group( 2, new Coordinate(1, 1)));
+        assertEquals(expected, groups);
+    }
+
     // [ ] two pixels touching only diagonally -> two separate groups of size 1
     // [ ] L-shape -> one group (DFS follows the turn)
     // [ ] U-shape or snake -> one group (DFS goes back on itself)
