@@ -299,7 +299,28 @@ public class DfsBinaryGroupFinderTest {
 
     //
     // Centroid math
-    // [ ] centroid needs integer division (e.g. pixels at x=0 and x=1 -> x=0)
+    // [x] centroid needs integer division (e.g. pixels at x=0 and x=1 -> x=0)
+
+    @Test 
+    void findConnectedGroups_centroidWithRemainder_usesIntegerDivision() {
+        //Arrange
+        int[][] image = {
+            {0, 0, 0, 0},
+            {1, 1, 1, 1},
+            {0, 0, 0, 0}
+        };
+        DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
+
+        //Act
+        List<Group> groups = finder.findConnectedGroups(image);
+
+        //Assert
+        List<Group> expected = List.of(
+            new Group(4, new Coordinate(1, 1))
+        );
+        assertEquals(expected, groups);
+    }
+
     // [ ] non-symmetric shape where you calculate the centroid by hand
     //
     // Image shapes
