@@ -252,7 +252,28 @@ public class DfsBinaryGroupFinderTest {
         assertEquals(expected, groups);
     }
 
-    // [ ] ring with a hole of 0s in the middle -> one group
+    // [x] ring with a hole of 0s in the middle -> one group
+
+    @Test 
+    void findConnectedGroups_ringShaped_returnsOneGroup() {
+        //Arrange
+        int[][] image = {
+            {1, 1, 1},
+            {1, 0, 1},
+            {1, 1, 1}
+        };
+        DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
+
+        //Act
+        List<Group> groups = finder.findConnectedGroups(image);
+
+        //Assert
+        List<Group> expected = List.of(
+            new Group(8, new Coordinate(1, 1))
+        );
+        assertEquals(expected, groups);
+    }
+
     // [ ] two groups separated by a column of 0s
     //
     // Centroid math
