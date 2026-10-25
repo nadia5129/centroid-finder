@@ -108,8 +108,41 @@ public class DfsBinaryGroupFinderTest {
         assertEquals(expected, groups);
     }
 
-    // [ ] 1x1 image containing a 1
-    // [ ] 1x1 image containing a 0
+    // [x] 1x1 image containing a 1
+
+    @Test 
+    void findConnectedGroups_oneByOneWithOne_returnsCentroid() {
+        //Arrange
+        int[][] image = {
+                {1}
+        };
+        DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
+
+        //Act
+        List<Group> groups = finder.findConnectedGroups(image);
+
+        //Assert
+        List<Group> expected = List.of(new Group(1, new Coordinate(0, 0)));
+        assertEquals(expected, groups);
+    }
+
+    // [x] 1x1 image containing a 0
+
+    @Test 
+    void findConnectedGroups_oneByOneWithZero_returnsEmptyList() {
+        //Arrange
+        int[][] image = {
+                {0}
+        };
+        DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
+
+        //Act
+        List<Group> groups = finder.findConnectedGroups(image);
+
+        //Assert
+        List<Group> expected = List.of();
+        assertEquals(expected, groups);
+    }
     //
     // Connectivity
     // [ ] two pixels side by side (horizontal) -> one group of size 2
