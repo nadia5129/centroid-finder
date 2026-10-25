@@ -67,7 +67,27 @@ public class DfsBinaryGroupFinderTest {
     }
 
 
-    // [ ] single pixel at (0, 0) -> top-left corner works
+    // [x] single pixel at (0, 0) -> top-left corner works
+
+    @Test 
+    void findConnectedGroups_topLeft_returnsCentroid() {
+        //Arrange
+        int[][] image = {
+                {1, 0, 0},
+                {0, 0, 0},
+                {0, 0, 0}
+        };
+        DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
+
+        //Act
+        List<Group> groups = finder.findConnectedGroups(image);
+
+        //Assert
+        List<Group> expected = List.of(new Group(1, new Coordinate(0, 0)));
+        assertEquals(expected, groups);
+    }
+
+
     // [ ] single pixel at the bottom-right corner -> edges don't go out of bounds
     // [ ] 1x1 image containing a 1
     // [ ] 1x1 image containing a 0
