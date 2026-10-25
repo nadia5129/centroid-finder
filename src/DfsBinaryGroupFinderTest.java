@@ -274,7 +274,29 @@ public class DfsBinaryGroupFinderTest {
         assertEquals(expected, groups);
     }
 
-    // [ ] two groups separated by a column of 0s
+    // [x] two groups separated by a column of 0s
+
+    @Test 
+    void findConnectedGroups_separatedByColumn_returnsTwoGroups() {
+        //Arrange
+        int[][] image = {
+            {1, 0, 1},
+            {1, 0, 1},
+            {1, 0, 1}
+        };
+        DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
+
+        //Act
+        List<Group> groups = finder.findConnectedGroups(image);
+
+        //Assert
+        List<Group> expected = List.of(
+            new Group(3, new Coordinate(2, 1)),
+            new Group(3, new Coordinate(0, 1))
+        );
+        assertEquals(expected, groups);
+    }
+
     //
     // Centroid math
     // [ ] centroid needs integer division (e.g. pixels at x=0 and x=1 -> x=0)
