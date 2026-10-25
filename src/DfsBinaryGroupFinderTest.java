@@ -145,7 +145,7 @@ public class DfsBinaryGroupFinderTest {
     }
     //
     // Connectivity
-    // [ ] two pixels side by side (horizontal) -> one group of size 2
+    // [x] two pixels side by side (horizontal) -> one group of size 2
 
     @Test 
     void findConnectedGroups_twoPixelsSideBySide_returnsOneGroup() {
@@ -165,7 +165,7 @@ public class DfsBinaryGroupFinderTest {
         assertEquals(expected, groups);
     }
 
-    // [ ] two pixels stacked (vertical) -> one group of size 2
+    // [x] two pixels stacked (vertical) -> one group of size 2
 
     @Test 
     void findConnectedGroups_twoPixelsStacked_returnsOneGroup() {
@@ -185,7 +185,7 @@ public class DfsBinaryGroupFinderTest {
         assertEquals(expected, groups);
     }
 
-    // [ ] two pixels touching only diagonally -> two separate groups of size 1
+    // [x] two pixels touching only diagonally -> two separate groups of size 1
 
     @Test 
     void findConnectedGroups_twoPixelsDiagonal_returnsTwoSeparateGroups() {
@@ -208,7 +208,29 @@ public class DfsBinaryGroupFinderTest {
         assertEquals(expected, groups);
     }
 
-    // [ ] L-shape -> one group (DFS follows the turn)
+    // [x] L-shape -> one group (DFS follows the turn)
+
+    @Test 
+    void findConnectedGroups_lShaped_returnsOneGroup() {
+        //Arrange
+        int[][] image = {
+            {1, 0, 0},
+            {1, 0, 0},
+            {1, 1, 0}
+        };
+        DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
+
+        //Act
+        List<Group> groups = finder.findConnectedGroups(image);
+
+        //Assert
+        List<Group> expected = List.of(
+            new Group(4, new Coordinate(0, 1))
+        );
+        assertEquals(expected, groups);
+    }
+
+
     // [ ] U-shape or snake -> one group (DFS goes back on itself)
     // [ ] ring with a hole of 0s in the middle -> one group
     // [ ] two groups separated by a column of 0s
