@@ -34,5 +34,22 @@ public class DistanceImageBinarizerTest {
         // Assert
         assertArrayEquals(new int[][] { {1} }, actual);
     }
+    
+    // The pixel is far from the target (distance 100, threshold 10),
+    // so the pixel should be black (0).
+    @Test
+    void toBinaryArray_pixelFarFromTarget_returnsBlack() {
+        // Arrange
+        BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+        image.setRGB(0, 0, 0x000064); // 100
+        DistanceImageBinarizer binarizer =
+            new DistanceImageBinarizer(new FakeDistanceFinder(), 0x000000, 10);
+
+        // Act
+        int[][] actual = binarizer.toBinaryArray(image);
+
+        // Assert
+        assertArrayEquals(new int[][] { {0} }, actual);
+    }
 
 }
