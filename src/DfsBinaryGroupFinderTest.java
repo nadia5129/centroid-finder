@@ -322,6 +322,27 @@ public class DfsBinaryGroupFinderTest {
     }
 
     // [ ] non-symmetric shape where you calculate the centroid by hand
+
+    @Test 
+    void findConnectedGroups_nonSymmetricShape_returnsCorrectCentroid() {
+        //Arrange
+        int[][] image = {
+            {0, 0, 0, 1},
+            {1, 1, 1, 1},
+            {0, 0, 0, 1}
+        };
+        DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
+
+        //Act
+        List<Group> groups = finder.findConnectedGroups(image);
+
+        //Assert
+        List<Group> expected = List.of(
+            new Group(6, new Coordinate(2, 1))
+        );
+        assertEquals(expected, groups);
+    }
+
     //
     // Image shapes
     // [ ] wide image (1 row, many columns)
