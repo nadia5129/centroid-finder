@@ -123,6 +123,21 @@ public class EuclideanColorDistanceTest {
         // Assert
         assertEquals(255.0, actual, 0.000001);
     }
+    
+    // Smallest possible nonzero distance
+    @Test
+    void distance_oneUnitDifference_returnsOne() {
+        // Arrange
+        int colorA = 0x000000;
+        int colorB = 0x000001;
+        EuclideanColorDistance finder = new EuclideanColorDistance();
+
+        // Act
+        double actual = finder.distance(colorA, colorB);
+
+        // Assert
+        assertEquals(1.0, actual, 0.000001);
+    }
 }
     
 
