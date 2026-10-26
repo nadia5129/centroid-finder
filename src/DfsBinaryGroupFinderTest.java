@@ -393,7 +393,26 @@ public class DfsBinaryGroupFinderTest {
         assertEquals(expected, groups);
     }
 
-    // [ ] non-square image (e.g. 3x5) -> x and y aren't swapped
+    // [x] non-square image (e.g. 3x5) -> x and y aren't swapped
+
+    @Test 
+    void findConnectedGroups_nonSquareImage_findsPixelsInFarColumns() {
+        //Arrange
+        int[][] image = {
+            {0, 0, 0, 0, 0},
+            {0, 0, 0, 1, 1},
+            {0, 0, 0, 0, 1}
+        };
+        DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
+
+        //Act
+        List<Group> groups = finder.findConnectedGroups(image);
+
+        //Assert
+        List<Group> expected = List.of(new Group(3, new Coordinate(3, 1)));
+        assertEquals(expected, groups);
+    }    
+
     //
     // Sorting (descending: size, then x, then y)
     // [ ] groups of different sizes -> biggest first
