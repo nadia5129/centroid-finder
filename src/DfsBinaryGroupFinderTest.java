@@ -438,6 +438,23 @@ public class DfsBinaryGroupFinderTest {
         assertEquals(expected, groups);
     }
     // [ ] same size, different x -> bigger x first
+    @Test
+    void findConnectedGroups_sameSize_sortsByXDescending() {
+        // Arrange
+        int[][] image = {
+            {1, 0, 1}
+        };
+        DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
+        // Act
+        List<Group> groups = finder.findConnectedGroups(image);
+        // Assert
+        List<Group> expected = List.of(
+            new Group(1, new Coordinate(2, 0)),
+            new Group(1, new Coordinate(0, 0))
+        );
+
+        assertEquals(expected, groups);
+    }
     // [ ] same size, same x, different y -> bigger y first
     //
     // Errors
