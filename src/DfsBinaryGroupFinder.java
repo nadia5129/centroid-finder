@@ -46,7 +46,13 @@ public class DfsBinaryGroupFinder implements BinaryGroupFinder {
             }
         }
         //input must be 1 or 0s else throw exception
-        //if () throw new IllegalArgumentException("values can only be 1 and 0");
+        for(int row = 0; row < image.length; row++){
+            for(int col = 0; col < image[row].length; col++){
+                if(image[row][col] != 0 && image[row][col] != 1){
+                    throw new IllegalArgumentException("values can only be 1 and 0");
+                }
+            }
+        }
         
 
         return null;
