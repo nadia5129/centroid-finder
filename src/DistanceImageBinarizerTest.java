@@ -1,7 +1,9 @@
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
+import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
+import java.awt.image.BufferedImage;
 
 public class DistanceImageBinarizerTest {
     // A pretend distance tool. The distance between two colors is just the
