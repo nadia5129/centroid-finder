@@ -3,7 +3,7 @@ import org.junit.jupiter.api.Test;
 
 public class EuclideanColorDistanceTest {
 
-     //Teest same colors/both colors red
+     //Test same colors/both colors red
     @Test
     void distance_sameColor_returnsZero() {
         // Arrange
@@ -33,6 +33,21 @@ public class EuclideanColorDistanceTest {
 
         // Assert
         assertEquals(255.0, actual, 0.000001);
+    }
+
+    //Test black and white
+    @Test
+    void distance_blackAndWhite_returnsCorrectDistance() {
+        // Arrange
+        int colorA = 0x000000;
+        int colorB = 0xFFFFFF;
+        EuclideanColorDistance finder = new EuclideanColorDistance();
+
+        // Act
+        double actual = finder.distance(colorA, colorB);
+
+        // Assert
+        assertEquals(Math.sqrt(3 * 255 * 255), actual, 0.000001);
     }
 }
     
