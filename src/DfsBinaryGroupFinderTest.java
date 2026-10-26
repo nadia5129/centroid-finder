@@ -369,7 +369,29 @@ public class DfsBinaryGroupFinderTest {
 
     // [ ] tall image (many rows, 1 column)
 
+    @Test 
+    void findConnectedGroups_tallImage_returnsTwoGroups() {
+        //Arrange
+        int[][] image = {
+            {1},
+            {1},
+            {0},
+            {1},
+            {1},
+            {1}
+        };
+        DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
 
+        //Act
+        List<Group> groups = finder.findConnectedGroups(image);
+
+        //Assert
+        List<Group> expected = List.of(
+            new Group(3, new Coordinate(0, 4)),
+            new Group(2, new Coordinate(0, 0))
+        );
+        assertEquals(expected, groups);
+    }
 
     // [ ] non-square image (e.g. 3x5) -> x and y aren't swapped
     //
