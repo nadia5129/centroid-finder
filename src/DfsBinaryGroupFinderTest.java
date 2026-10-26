@@ -421,6 +421,17 @@ public class DfsBinaryGroupFinderTest {
     //
     // Errors
     // [ ] null image -> NullPointerException
+
+    @Test 
+    void findConnectedGroups_nullImage_throwsNullPointerException() {
+        //Arrange
+        int[][] image = null;
+        DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
+
+        //Act + Assert
+        assertThrows(NullPointerException.class, () -> finder.findConnectedGroups(image));
+    }
+
     // [ ] one null row -> NullPointerException
     // [ ] empty array (new int[0][0]) -> IllegalArgumentException
     // [ ] rows of different lengths -> IllegalArgumentException
