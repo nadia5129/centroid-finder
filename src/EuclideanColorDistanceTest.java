@@ -93,12 +93,28 @@ public class EuclideanColorDistanceTest {
         // Assert
         assertEquals(distanceAB, distanceBA, 0.000001);
     }
-        // Green channel only
+    
+    //Test Green channel only
     @Test
     void distance_blackAndGreen_returns255() {
         // Arrange
         int colorA = 0x000000;
         int colorB = 0x00FF00;
+        EuclideanColorDistance finder = new EuclideanColorDistance();
+
+        // Act
+        double actual = finder.distance(colorA, colorB);
+
+        // Assert
+        assertEquals(255.0, actual, 0.000001);
+    }
+        
+    // Blue channel only
+    @Test
+    void distance_blackAndBlue_returns255() {
+        // Arrange
+        int colorA = 0x000000;
+        int colorB = 0x0000FF;
         EuclideanColorDistance finder = new EuclideanColorDistance();
 
         // Act
