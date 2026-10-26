@@ -123,7 +123,7 @@ public class EuclideanColorDistanceTest {
         // Assert
         assertEquals(255.0, actual, 0.000001);
     }
-    
+
     // Smallest possible nonzero distance
     @Test
     void distance_oneUnitDifference_returnsOne() {
@@ -138,6 +138,22 @@ public class EuclideanColorDistanceTest {
         // Assert
         assertEquals(1.0, actual, 0.000001);
     }
+    
+    // All three channels differ by different amounts: 3-4-12 gives exactly 13
+    @Test
+    void distance_allChannelsDifferent_returnsThirteen() {
+        // Arrange
+        int colorA = 0x000000;
+        int colorB = 0x03040C;
+        EuclideanColorDistance finder = new EuclideanColorDistance();
+
+        // Act
+        double actual = finder.distance(colorA, colorB);
+
+        // Assert: 3^2 + 4^2 + 12^2 = 169
+        assertEquals(13.0, actual, 0.000001);
+    }
+
 }
     
 
