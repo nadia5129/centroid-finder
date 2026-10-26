@@ -30,6 +30,25 @@ public class DfsBinaryGroupFinder implements BinaryGroupFinder {
     */
     @Override
     public List<Group> findConnectedGroups(int[][] image) {
+        if (image == null) throw new NullPointerException("image is null!");
+        //null row
+        for (int row = 0; row < image.length; row++){
+            if (image[row] == null){
+                throw new NullPointerException("null in row");
+            }
+        }
+        //empty array
+        if (image.length == 0) throw new IllegalArgumentException("array is empty");
+        //different length rows
+        for (int rowNum = 0; rowNum < image.length; rowNum++){
+            if (image[rowNum].length != image[0].length){
+                throw new IllegalArgumentException("all row lengths must be the same");
+            }
+        }
+        //input must be 1 or 0s else throw exception
+        //if () throw new IllegalArgumentException("values can only be 1 and 0");
+        
+
         return null;
     }
     
