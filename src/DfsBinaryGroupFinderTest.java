@@ -397,6 +397,27 @@ public class DfsBinaryGroupFinderTest {
     //
     // Sorting (descending: size, then x, then y)
     // [ ] groups of different sizes -> biggest first
+    @Test
+    void findConnectedGroups_differentSizes_sortsLargestFirst() {
+        // Arrange
+        int[][] image = {
+            {1, 0, 1, 1},
+            {0, 0, 1, 0}
+        };
+
+        DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
+
+        // Act
+        List<Group> groups = finder.findConnectedGroups(image);
+
+        // Assert
+        List<Group> expected = List.of(
+            new Group(3, new Coordinate(2, 0)),
+            new Group(1, new Coordinate(0, 0))
+        );
+
+        assertEquals(expected, groups);
+    }
     // [ ] same size, different x -> bigger x first
     // [ ] same size, same x, different y -> bigger y first
     //
