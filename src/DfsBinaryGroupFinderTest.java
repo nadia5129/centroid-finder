@@ -505,7 +505,18 @@ public class DfsBinaryGroupFinderTest {
         assertThrows(NullPointerException.class, () -> finder.findConnectedGroups(image));
     }
 
-    // [ ] empty array (new int[0][0]) -> IllegalArgumentException
+    // [x] empty array (new int[0][0]) -> IllegalArgumentException
+
+    @Test 
+    void findConnectedGroups_emptyArray_throwsIllegalArgumentException() {
+        //Arrange
+        int[][] image = new int [0][0];
+        DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
+
+        //Act + Assert
+        assertThrows(IllegalArgumentException.class, () -> finder.findConnectedGroups(image));
+    }
+
     // [ ] rows of different lengths -> IllegalArgumentException
     // [ ] a value that isn't 0 or 1 (like 2 or -1) -> IllegalArgumentException
 }
