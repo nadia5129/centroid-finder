@@ -39,9 +39,12 @@ public class DfsBinaryGroupFinder implements BinaryGroupFinder {
         }
         //empty array
         if (image.length == 0) throw new IllegalArgumentException("array is empty");
-
         //different length rows
-        //if () throw new IllegalArgumentException("rows are different lengths");
+        for (int rowNum = 0; rowNum < image.length; rowNum++){
+            if (image[rowNum].length != image[0].length){
+                throw new IllegalArgumentException("all row lengths must be the same");
+            }
+        }
         //input must be 1 or 0s else throw exception
         //if () throw new IllegalArgumentException("values can only be 1 and 0");
         
