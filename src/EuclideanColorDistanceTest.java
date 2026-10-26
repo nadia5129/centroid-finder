@@ -138,7 +138,7 @@ public class EuclideanColorDistanceTest {
         // Assert
         assertEquals(1.0, actual, 0.000001);
     }
-    
+
     // All three channels differ by different amounts: 3-4-12 gives exactly 13
     @Test
     void distance_allChannelsDifferent_returnsThirteen() {
@@ -154,6 +154,38 @@ public class EuclideanColorDistanceTest {
         assertEquals(13.0, actual, 0.000001);
     }
 
+    // Some dials go up and some go down between the two colors (red goes up
+    // by 2, green goes down by 3, blue goes down by 6). Distance should never
+    // be negative, so going down has to count the same as going up.
+    // (2*2 + 3*3 + 6*6 = 49, and the square root of 49 is 7.)
+    @Test
+    void distance_mixedSignDifferences_returnsSeven() {
+        // Arrange
+        int colorA = 0x0A141E; // red 10, green 20, blue 30
+        int colorB = 0x0C1118; // red 12, green 17, blue 24
+        EuclideanColorDistance finder = new EuclideanColorDistance();
+
+        // Act
+        double actual = finder.distance(colorA, colorB);
+
+        // Assert
+        assertEquals(7.0, actual, 0.000001);
+    }
+    
+    // Some channels go up and some go down, so negative differences must work
+    @Test
+    void distance_bothColorsNonZero_returnsCorrectDistance() {
+        // Arrange
+        int colorA = 0x102030;
+        int colorB = 0x405060;
+        EuclideanColorDistance finder = new EuclideanColorDistance();
+
+        // Act
+        double actual = finder.distance(colorA, colorB);
+
+        // Assert
+        assertEquals(83.13843876330611, actual, 0.000001);
+    }
 }
     
 
