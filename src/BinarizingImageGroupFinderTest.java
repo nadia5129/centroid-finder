@@ -86,7 +86,7 @@ public class BinarizingImageGroupFinderTest {
     //     (hint: assertSame(image, binarizer.imageSeen) checks it's the exact same object)
     @Test
     void findConnectedGroups_passesImageToBinarizer() {
-    //Arrange
+        //Arrange
         BufferedImage image = new BufferedImage(2, 2, BufferedImage.TYPE_INT_RGB);
         FakeBinarizer binarizer = new FakeBinarizer(new int[][] {
             {1, 0},
@@ -96,10 +96,10 @@ public class BinarizingImageGroupFinderTest {
         FakeGroupFinder groupFinder = new FakeGroupFinder(fakeGroups);
         BinarizingImageGroupFinder finder = new BinarizingImageGroupFinder(binarizer, groupFinder);
 
-    // Act
-    finder.findConnectedGroups(image);
-    //Assert
-    assertSame(image, binarizer.imageSeen);
+        // Act
+        finder.findConnectedGroups(image);
+        //Assert
+        assertSame(image, binarizer.imageSeen);
 
     }
 
@@ -107,7 +107,7 @@ public class BinarizingImageGroupFinderTest {
     //     (assertSame(binarizer.gridToReturn, groupFinder.gridSeen))
     @Test
     void findConnectedGroups_passesGridToGroupFinder() {
-    //Arrange
+        //Arrange
         BufferedImage image = new BufferedImage(2, 2, BufferedImage.TYPE_INT_RGB);
         FakeBinarizer binarizer = new FakeBinarizer(new int[][] {
             {1, 0},
@@ -117,16 +117,16 @@ public class BinarizingImageGroupFinderTest {
         FakeGroupFinder groupFinder = new FakeGroupFinder(fakeGroups);
         BinarizingImageGroupFinder finder = new BinarizingImageGroupFinder(binarizer, groupFinder);
 
-    // Act
-    finder.findConnectedGroups(image);
-    //Assert
-    assertSame(binarizer.gridToReturn, groupFinder.gridSeen);
+        // Act
+        finder.findConnectedGroups(image);
+        //Assert
+        assertSame(binarizer.gridToReturn, groupFinder.gridSeen);
 
     }
     // [x] each fake is called exactly once (timesCalled == 1)
     @Test
     void findConnectedGroups_callsEachHelperOnce() {
-    //Arrange
+        //Arrange
         BufferedImage image = new BufferedImage(2, 2, BufferedImage.TYPE_INT_RGB);
         FakeBinarizer binarizer = new FakeBinarizer(new int[][] {
             {1, 0},
@@ -136,11 +136,11 @@ public class BinarizingImageGroupFinderTest {
         FakeGroupFinder groupFinder = new FakeGroupFinder(fakeGroups);
         BinarizingImageGroupFinder finder = new BinarizingImageGroupFinder(binarizer, groupFinder);
 
-    // Act
-    finder.findConnectedGroups(image);
-    //Assert
-    assertEquals(1, binarizer.timesCalled);
-    assertEquals(1, groupFinder.timesCalled);
+        // Act
+        finder.findConnectedGroups(image);
+        //Assert
+        assertEquals(1, binarizer.timesCalled);
+        assertEquals(1, groupFinder.timesCalled);
 
     }
     //

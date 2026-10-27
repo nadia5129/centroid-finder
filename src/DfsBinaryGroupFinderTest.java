@@ -52,9 +52,9 @@ public class DfsBinaryGroupFinderTest {
     void findConnectedGroups_allOnes_returnsCentroidInMiddle() {
         //Arrange
         int[][] image = {
-                {1, 1, 1},
-                {1, 1, 1},
-                {1, 1, 1}
+            {1, 1, 1},
+            {1, 1, 1},
+            {1, 1, 1}
         };
         DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
     
@@ -73,9 +73,9 @@ public class DfsBinaryGroupFinderTest {
     void findConnectedGroups_topLeft_returnsCentroid() {
         //Arrange
         int[][] image = {
-                {1, 0, 0},
-                {0, 0, 0},
-                {0, 0, 0}
+            {1, 0, 0},
+            {0, 0, 0},
+            {0, 0, 0}
         };
         DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
 
@@ -94,9 +94,9 @@ public class DfsBinaryGroupFinderTest {
     void findConnectedGroups_bottomRight_returnsCentroid() {
         //Arrange
         int[][] image = {
-                {0, 0, 0},
-                {0, 0, 0},
-                {0, 0, 1}
+            {0, 0, 0},
+            {0, 0, 0},
+            {0, 0, 1}
         };
         DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
 
@@ -114,7 +114,7 @@ public class DfsBinaryGroupFinderTest {
     void findConnectedGroups_oneByOneWithOne_returnsCentroid() {
         //Arrange
         int[][] image = {
-                {1}
+            {1}
         };
         DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
 
@@ -132,7 +132,7 @@ public class DfsBinaryGroupFinderTest {
     void findConnectedGroups_oneByOneWithZero_returnsEmptyList() {
         //Arrange
         int[][] image = {
-                {0}
+            {0}
         };
         DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
 
