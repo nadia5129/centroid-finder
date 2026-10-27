@@ -1,4 +1,6 @@
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 
@@ -58,6 +60,8 @@ public class DfsBinaryGroupFinder implements BinaryGroupFinder {
 
         boolean[][] visited = new boolean[image.length][image[0].length];
         Deque<Coordinate> workDeque = new ArrayDeque<>();
+
+        List<Group> groups = new ArrayList<>();
         
             //Go through every pixel
             for (int row = 0; row < image.length; row++){
@@ -102,19 +106,12 @@ public class DfsBinaryGroupFinder implements BinaryGroupFinder {
                                 workDeque.push(new Coordinate(nx, ny));
                             }
                         }
+                        groups.add(new Group(count, new Coordinate(sumX / count, sumY / count)));
                     }
                 }
             }
-
-        //when I find a 1 that hasnt been visited, it starts a new group
-
-        //run the dfs visiting every connected 1, marking each one visited and adding it to a count, x total, and y total
-
-        // when the dfs finishes create a new Group : new Group(count, new Coordinate(sumX / count, sumY / count)) and add it to your list.
-
-        //after going through every pixel, sort the list in descending order and return it....
-
-        return null;
+            Collections.sort(groups, Collections.reverseOrder());
+        return groups;
     }
     
 }
