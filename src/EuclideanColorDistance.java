@@ -38,7 +38,7 @@ public class EuclideanColorDistance implements ColorDistanceFinder {
 
         extract blue: 
         int blueA = colorA & 0xFF;
-        int blueA = colorB & 0xFF;
+        int blueB = colorB & 0xFF;
 
         int redDiff = redA - redB;
         int greenDiff = greenA - greenB;
@@ -63,6 +63,18 @@ public class EuclideanColorDistance implements ColorDistanceFinder {
      */
     @Override
     public double distance(int colorA, int colorB) {
-        return 0;
+
+        //extract red:
+        int redA = (colorA >> 16) & 0xFF;
+        int redB = (colorB >> 16) & 0xFF;
+
+        //extract green: 
+        int greenA = (colorA >> 8) & 0xFF;
+        int greenB = (colorB >> 8) & 0xFF;
+
+       // extract blue: 
+        int blueA = colorA & 0xFF;
+        int blueB = colorB & 0xFF;
+        
     }
 }
