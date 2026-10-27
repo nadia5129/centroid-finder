@@ -137,7 +137,7 @@ public class BinarizingImageGroupFinderTest {
     }
     //
     // Results
-    // [ ] group finder returns an empty list -> result is an empty list
+    // [x] group finder returns an empty list -> result is an empty list
     @Test 
     void findConnectedGroups_noGroupsFound_returnsEmptyList(){
         //Arrange
@@ -155,7 +155,31 @@ public class BinarizingImageGroupFinderTest {
         assertEquals(List.of(), groups);
 
     }
-    // [ ] group finder returns several groups -> result has the same groups in the same order
+    // [x] group finder returns several groups -> result has the same groups in the same order
+    @Test 
+    void findConnectedGroups_severalGroups_returnsSameGroupsInOrder(){
+        // Arrange
+        BufferedImage image = new BufferedImage(5, 3, BufferedImage.TYPE_INT_RGB);
+        FakeBinarizer binarizer = new FakeBinarizer(new int[][] {
+            {1, 1, 1, 0, 1},
+            {0, 0, 0, 0, 0},
+            {1, 1, 0, 0, 0}
+        });
+        // These match the grid above, listed biggest first
+        List<Group> fakeGroups = List.of(
+            new Group(3, new Coordinate(1, 0)),   // top row, left side
+            new Group(2, new Coordinate(0, 2)),   // bottom row
+            new Group(1, new Coordinate(4, 0))    // top row, far right
+        );
+        FakeGroupFinder groupFinder = new FakeGroupFinder(fakeGroups);
+        BinarizingImageGroupFinder finder = new BinarizingImageGroupFinder(binarizer, groupFinder);
+
+        // Act
+        List<Group> groups = finder.findConnectedGroups(image);
+
+        // Assert
+        assertEquals(fakeGroups, groups);
+    }
     //
     // Real pieces together (no fakes)
     // [ ] use a real DistanceImageBinarizer (with a FakeDistanceFinder-style fake or the
