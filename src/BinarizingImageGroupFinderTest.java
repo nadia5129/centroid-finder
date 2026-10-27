@@ -116,10 +116,29 @@ public class BinarizingImageGroupFinderTest {
 
     }
     // [ ] each fake is called exactly once (timesCalled == 1)
-    
+    @Test
+    void findConnectedGroups_callsEachHelperOnce() {
+    //Arrange
+        BufferedImage image = new BufferedImage(2, 2, BufferedImage.TYPE_INT_RGB);
+        FakeBinarizer binarizer = new FakeBinarizer(new int[][] {
+            {1, 0},
+            {0, 0}
+        });
+        List<Group> fakeGroups = List.of(new Group(1, new Coordinate(0, 0)));
+        FakeGroupFinder groupFinder = new FakeGroupFinder(fakeGroups);
+        BinarizingImageGroupFinder finder = new BinarizingImageGroupFinder(binarizer, groupFinder);
+
+    // Act
+    finder.findConnectedGroups(image);
+    //Assert
+    assertEquals(1, binarizer.timesCalled);
+    assertEquals(1, groupFinder.timesCalled);
+
+    }
     //
     // Results
     // [ ] group finder returns an empty list -> result is an empty list
+    
     // [ ] group finder returns several groups -> result has the same groups in the same order
     //
     // Real pieces together (no fakes)
