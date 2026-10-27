@@ -53,7 +53,7 @@ public class DistanceImageBinarizerTest {
         assertArrayEquals(new int[][] { {0} }, actual);
     }
 
-    
+
     // ---------- toBufferedImage ----------
 
     // Turn a 2x2 grid of 1s and 0s into a picture. 1 is white, 0 is black.
@@ -77,6 +77,30 @@ public class DistanceImageBinarizerTest {
         assertEquals(0xFFFFFF, actual.getRGB(1, 0) & 0xFFFFFF);
         assertEquals(0xFFFFFF, actual.getRGB(0, 1) & 0xFFFFFF);
         assertEquals(0x000000, actual.getRGB(1, 1) & 0xFFFFFF);
+    }
+
+    // A grid with 2 rows and 3 columns should become a picture that is
+    // 3 wide and 2 tall (not the other way around). The white pixels
+    // should land in the right spots.
+    @Test
+    void toBufferedImage_nonSquareGrid_hasCorrectSizeAndPixelPlacement() {
+        // Arrange
+        int[][] grid = {
+            {1, 0, 0},
+            {0, 0, 1}
+        };
+        DistanceImageBinarizer binarizer =
+            new DistanceImageBinarizer(new FakeDistanceFinder(), 0x000000, 10);
+
+        // Act
+        BufferedImage actual = binarizer.toBufferedImage(grid);
+
+        // Assert
+        assertEquals(3, actual.getWidth());
+        assertEquals(2, actual.getHeight());
+        assertEquals(0xFFFFFF, actual.getRGB(0, 0) & 0xFFFFFF); // row 0, col 0
+        assertEquals(0x000000, actual.getRGB(1, 0) & 0xFFFFFF); // row 0, col 1
+        assertEquals(0xFFFFFF, actual.getRGB(2, 1) & 0xFFFFFF); // row 1, col 2
     }
 
 }
