@@ -53,6 +53,22 @@ public class DistanceImageBinarizerTest {
         assertArrayEquals(new int[][] { {0} }, actual);
     }
 
+    // The README says "less than" the threshold, so a distance that EQUALS
+    // the threshold is not close enough. Distance 10, threshold 10 -> black.
+    @Test
+    void toBinaryArray_distanceEqualsThreshold_returnsBlack() {
+        // Arrange
+        BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+        image.setRGB(0, 0, 0x00000A); // 10
+        DistanceImageBinarizer binarizer =
+            new DistanceImageBinarizer(new FakeDistanceFinder(), 0x000000, 10);
+
+        // Act
+        int[][] actual = binarizer.toBinaryArray(image);
+
+        // Assert
+        assertArrayEquals(new int[][] { {0} }, actual);
+    }
 
     // ---------- toBufferedImage ----------
 
