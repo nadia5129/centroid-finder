@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.annotation.Testable;
 
 public class BinarizingImageGroupFinderTest {
 
@@ -73,8 +74,27 @@ public class BinarizingImageGroupFinderTest {
     // TODO tests to write:
     //
     // Handoffs (use the fakes' "seen" fields)
-    // [ ] the image passed in is the same one the binarizer receives
+    // [x] the image passed in is the same one the binarizer receives
     //     (hint: assertSame(image, binarizer.imageSeen) checks it's the exact same object)
+    @Test
+    void findConnectedGroups_passesImageToBinarizer() {
+    //Arrange
+        BufferedImage image = new BufferedImage(2, 2, BufferedImage.TYPE_INT_RGB);
+        FakeBinarizer binarizer = new FakeBinarizer(new int[][] {
+            {1, 0},
+            {0, 0}
+        });
+        List<Group> fakeGroups = List.of(new Group(1, new Coordinate(0, 0)));
+        FakeGroupFinder groupFinder = new FakeGroupFinder(fakeGroups);
+        BinarizingImageGroupFinder finder = new BinarizingImageGroupFinder(binarizer, groupFinder);
+
+    // Act
+    finder.findConnectedGroups(image);
+    //Assert
+    assertSame(image, binarizer.imageSeen);
+
+    }
+
     // [ ] the grid the binarizer returns is the same one the group finder receives
     //     (assertSame(binarizer.gridToReturn, groupFinder.gridSeen))
     // [ ] each fake is called exactly once (timesCalled == 1)
