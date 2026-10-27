@@ -4,7 +4,6 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.annotation.Testable;
 
 public class BinarizingImageGroupFinderTest {
 
@@ -49,6 +48,15 @@ public class BinarizingImageGroupFinderTest {
             gridSeen = image;
             timesCalled++;
             return groupsToReturn;
+        }
+    }
+
+    // A pretend distance finder: exact color match = 0, anything else = 1000.
+    // Stands in for EuclideanColorDistance until Wave 3 is done.
+    private static class ExactMatchDistance implements ColorDistanceFinder {
+        @Override
+        public double distance(int colorA, int colorB) {
+            return colorA == colorB ? 0 : 1000;
         }
     }
 
@@ -182,7 +190,40 @@ public class BinarizingImageGroupFinderTest {
     }
     //
     // Real pieces together (no fakes)
-    // [ ] use a real DistanceImageBinarizer (with a FakeDistanceFinder-style fake or the
+    // [x] use a real DistanceImageBinarizer (with a FakeDistanceFinder-style fake or the
     //     real EuclideanColorDistance once Wave 3 is done) and your real DfsBinaryGroupFinder.
     //     Make a small image with setRGB, work out the groups by hand, and check them.
+    @Test
+    void findConnectedGroups_realBinarizerAndDfs_findsCorrectGroups() {
+        // Arrange
+        // The image we paint (1 = white, 0 = black), 4 wide and 3 tall:
+        //         x=0 x=1 x=2 x=3
+        //   y=0 {  1,  1,  0,  0 }
+        //   y=1 {  1,  0,  0,  1 }
+        //   y=2 {  0,  0,  0,  1 }
+        BufferedImage image = new BufferedImage(4, 3, BufferedImage.TYPE_INT_RGB);
+        // setRGB takes (x, y), so column first
+        image.setRGB(0, 0, 0xFFFFFF);
+        image.setRGB(1, 0, 0xFFFFFF);
+        image.setRGB(0, 1, 0xFFFFFF);
+        image.setRGB(3, 1, 0xFFFFFF);
+        image.setRGB(3, 2, 0xFFFFFF);
+
+        DistanceImageBinarizer binarizer =
+            new DistanceImageBinarizer(new ExactMatchDistance(), 0xFFFFFF, 10);
+        DfsBinaryGroupFinder groupFinder = new DfsBinaryGroupFinder();
+        BinarizingImageGroupFinder finder = new BinarizingImageGroupFinder(binarizer, groupFinder);
+
+        // Act
+        List<Group> groups = finder.findConnectedGroups(image);
+
+        // Assert
+        List<Group> expected = List.of(
+            // L-shape: (0,0), (1,0), (0,1) -> x = 1/3 = 0, y = 1/3 = 0
+            new Group(3, new Coordinate(0, 0)),
+            // right column: (3,1), (3,2) -> x = 6/2 = 3, y = 3/2 = 1
+            new Group(2, new Coordinate(3, 1))
+        );
+        assertEquals(expected, groups);
+    }
 }
