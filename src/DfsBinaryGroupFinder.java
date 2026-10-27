@@ -63,38 +63,37 @@ public class DfsBinaryGroupFinder implements BinaryGroupFinder {
 
         List<Group> groups = new ArrayList<>();
         
-            //Go through every pixel
-            for (int row = 0; row < image.length; row++){
-                for (int col = 0; col < image[row].length; col++){
-                    if (image[row][col] == 1 && visited[row][col] == false){
-                        visited[row][col] = true;
-                        workDeque.push(new Coordinate(col, row));
-                        int count = 0;
-                        int sumX = 0;
-                        int sumY = 0;
-                        while(!workDeque.isEmpty()){
-                            Coordinate currentPixel = workDeque.pop();
-                            count++;
-                            sumX += currentPixel.x();
-                            sumY += currentPixel.y();
-                            //right neighbor check
-                            int nx = currentPixel.x() + 1;
-                            int ny = currentPixel.y();
-                            if (ny >= 0 && ny < image.length && nx >= 0 && nx < image[0].length && image[ny][nx] == 1 && visited[ny][nx] == false ){
-                                visited[ny][nx] = true;
-                                workDeque.push(new Coordinate(nx, ny));
-                            }
-                            //left neighbor check
-                            nx = currentPixel.x() - 1;
-                            ny = currentPixel.y();
-                            if (ny >= 0 && ny < image.length && nx >= 0 && nx < image[0].length && image[ny][nx] == 1 && visited[ny][nx] == false ){
-                                visited[ny][nx] = true;
-                                workDeque.push(new Coordinate(nx, ny));
-                            }
-                            //down neighbor check
-                            nx = currentPixel.x();
-                            ny = currentPixel.y() + 1;
-                            if (ny >= 0 && ny < image.length && nx >= 0 && nx < image[0].length && image[ny][nx] == 1 && visited[ny][nx] == false ){
+        //Go through every pixel
+        for (int row = 0; row < image.length; row++){
+            for (int col = 0; col < image[row].length; col++){
+                if (image[row][col] == 1 && visited[row][col] == false){
+                    visited[row][col] = true;
+                    workDeque.push(new Coordinate(col, row));
+                    int count = 0;
+                    int sumX = 0;
+                    int sumY = 0;
+                    while(!workDeque.isEmpty()){                            Coordinate currentPixel = workDeque.pop();
+                          count++;
+                        sumX += currentPixel.x();
+                        sumY += currentPixel.y();
+                        //right neighbor check
+                       int nx = currentPixel.x() + 1;
+                        int ny = currentPixel.y();
+                        if (ny >= 0 && ny < image.length && nx >= 0 && nx < image[0].length && image[ny][nx] == 1 && visited[ny][nx] == false ){
+                        visited[ny][nx] = true;
+                            workDeque.push(new Coordinate(nx, ny));
+                        }
+                        //left neighbor check
+                        nx = currentPixel.x() - 1;
+                        ny = currentPixel.y();
+                        if (ny >= 0 && ny < image.length && nx >= 0 && nx < image[0].length && image[ny][nx] == 1 && visited[ny][nx] == false ){
+                            visited[ny][nx] = true;
+                            workDeque.push(new Coordinate(nx, ny));
+                        }
+                        //down neighbor check
+                        nx = currentPixel.x();
+                        ny = currentPixel.y() + 1;
+                        if (ny >= 0 && ny < image.length && nx >= 0 && nx < image[0].length && image[ny][nx] == 1 && visited[ny][nx] == false ){
                                 visited[ny][nx] = true;
                                 workDeque.push(new Coordinate(nx, ny));
                             }
