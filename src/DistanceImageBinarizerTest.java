@@ -103,4 +103,30 @@ public class DistanceImageBinarizerTest {
         assertEquals(0xFFFFFF, actual.getRGB(2, 1) & 0xFFFFFF); // row 1, col 2
     }
 
+    // TODO tests to add (Wave 4 says MAKE SURE YOU MAKE THOROUGH UNIT TESTS):
+    //
+    // toBinaryArray: threshold edges
+    // [ ] distance exactly equal to threshold -> black (0), since the rule is "less than"
+    // [ ] distance one below threshold -> white (1)
+    // [ ] threshold of 0 -> every pixel is black, even an exact match
+    //
+    // toBinaryArray: alpha channel (README hint)
+    // [ ] image with TYPE_INT_ARGB and a pixel like 0xFF000000 -> FakeDistanceFinder's
+    //     colorsSeen should hold 0x000000, not 0xFF000000 (alpha bits stripped)
+    // [ ] the target color is what gets passed to distance() (check colorsSeen)
+    //
+    // toBinaryArray: shape and placement
+    // [ ] non-square image (e.g. 3 wide, 2 tall) -> array is [2][3], not [3][2]
+    // [ ] mixed image with white and black pixels -> each lands at [y][x]
+    //     (getRGB takes (x, y), but the array is [row][col])
+    // [ ] distance() is called once per pixel (colorsSeen size = 2 * width * height)
+    //
+    // toBufferedImage
+    // [ ] all 0s -> every pixel is black
+    // [ ] all 1s -> every pixel is white
+    // [ ] 1x1 grid works
+    //
+    // Round trip
+    // [ ] toBufferedImage(toBinaryArray(image)) gives a black-and-white version
+    //     of the image with the right pixels white
 }
