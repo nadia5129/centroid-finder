@@ -1,5 +1,6 @@
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
@@ -19,6 +20,18 @@ public class DistanceImageBinarizerTest {
             return Math.abs(colorA - colorB);
         }
     }
+
+    // Makes an image where every pixel is the same color.
+    private static BufferedImage imageFilledWith(int width, int height, int color) {
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                image.setRGB(x, y, color);
+            }
+        }
+        return image;
+    }
+
     // If pixel is exactly the target color distance is 0. Less
     // than the threshold pixel should be white or 1.
     @Test
@@ -118,7 +131,66 @@ public class DistanceImageBinarizerTest {
         assertEquals(0x000000, actual.getRGB(1, 0) & 0xFFFFFF); // row 0, col 1
         assertEquals(0xFFFFFF, actual.getRGB(2, 1) & 0xFFFFFF); // row 1, col 2
     }
+    
+    @Test
+    void toBufferedImage_allZeros_everyPixelBlack() {
+        // Arrange
+        int[][] grid = {
+            {0, 0, 0},
+            {0, 0, 0}
+        };
+        DistanceImageBinarizer binarizer =
+            new DistanceImageBinarizer(new FakeDistanceFinder(), 0x000000, 10);
 
+        // Act
+        BufferedImage actual = binarizer.toBufferedImage(grid);
+
+        // Assert
+        for (int y = 0; y < 2; y++) {
+            for (int x = 0; x < 3; x++) {
+                assertEquals(0x000000, actual.getRGB(x, y) & 0xFFFFFF);
+            }
+        }
+    }
+
+    // A grid of all 1s should make a picture where every pixel is white.
+    @Test
+    void toBufferedImage_allOnes_everyPixelWhite() {
+        // Arrange
+        int[][] grid = {
+            {1, 1, 1},
+            {1, 1, 1}
+        };
+        DistanceImageBinarizer binarizer =
+            new DistanceImageBinarizer(new FakeDistanceFinder(), 0x000000, 10);
+
+        // Act
+        BufferedImage actual = binarizer.toBufferedImage(grid);
+
+        // Assert
+        for (int y = 0; y < 2; y++) {
+            for (int x = 0; x < 3; x++) {
+                assertEquals(0xFFFFFF, actual.getRGB(x, y) & 0xFFFFFF);
+            }
+        }
+    }
+
+    // The smallest possible grid, just one square, should still work.
+    @Test
+    void toBufferedImage_oneByOne_makesOnePixelImage() {
+        // Arrange
+        int[][] grid = { {1} };
+        DistanceImageBinarizer binarizer =
+            new DistanceImageBinarizer(new FakeDistanceFinder(), 0x000000, 10);
+
+        // Act
+        BufferedImage actual = binarizer.toBufferedImage(grid);
+
+        // Assert
+        assertEquals(1, actual.getWidth());
+        assertEquals(1, actual.getHeight());
+        assertEquals(0xFFFFFF, actual.getRGB(0, 0) & 0xFFFFFF);
+    }
     // TODO tests to add (Wave 4 says MAKE SURE YOU MAKE THOROUGH UNIT TESTS):
     //
     // toBinaryArray: threshold edges
@@ -145,4 +217,21 @@ public class DistanceImageBinarizerTest {
     // Round trip
     // [ ] toBufferedImage(toBinaryArray(image)) gives a black-and-white version
     //     of the image with the right pixels white
+    @Test
+    void roundTrip_matchingPixelBecomesWhiteAndOthersBlack() {
+        // Arrange
+        BufferedImage image = imageFilledWith(2, 2, 0x000064); // far from target
+        image.setRGB(0, 0, 0x000000); // the only match
+        DistanceImageBinarizer binarizer =
+            new DistanceImageBinarizer(new FakeDistanceFinder(), 0x000000, 10);
+
+        // Act
+        BufferedImage actual = binarizer.toBufferedImage(binarizer.toBinaryArray(image));
+
+        // Assert
+        assertEquals(0xFFFFFF, actual.getRGB(0, 0) & 0xFFFFFF);
+        assertEquals(0x000000, actual.getRGB(1, 0) & 0xFFFFFF);
+        assertEquals(0x000000, actual.getRGB(0, 1) & 0xFFFFFF);
+        assertEquals(0x000000, actual.getRGB(1, 1) & 0xFFFFFF);
+    }
 }
