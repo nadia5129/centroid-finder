@@ -73,13 +73,34 @@ public class DfsBinaryGroupFinder implements BinaryGroupFinder {
                             count++;
                             sumX += currentPixel.x();
                             sumY += currentPixel.y();
+                            //right neighbor check
                             int nx = currentPixel.x() + 1;
                             int ny = currentPixel.y();
                             if (ny >= 0 && ny < image.length && nx >= 0 && nx < image[0].length && image[ny][nx] == 1 && visited[ny][nx] == false ){
                                 visited[ny][nx] = true;
                                 workDeque.push(new Coordinate(nx, ny));
                             }
-
+                            //left neighbor check
+                            nx = currentPixel.x() - 1;
+                            ny = currentPixel.y();
+                            if (ny >= 0 && ny < image.length && nx >= 0 && nx < image[0].length && image[ny][nx] == 1 && visited[ny][nx] == false ){
+                                visited[ny][nx] = true;
+                                workDeque.push(new Coordinate(nx, ny));
+                            }
+                            //down neighbor check
+                            nx = currentPixel.x();
+                            ny = currentPixel.y() + 1;
+                            if (ny >= 0 && ny < image.length && nx >= 0 && nx < image[0].length && image[ny][nx] == 1 && visited[ny][nx] == false ){
+                                visited[ny][nx] = true;
+                                workDeque.push(new Coordinate(nx, ny));
+                            }
+                            //above neighbor check
+                            nx = currentPixel.x();
+                            ny = currentPixel.y() - 1;
+                            if (ny >= 0 && ny < image.length && nx >= 0 && nx < image[0].length && image[ny][nx] == 1 && visited[ny][nx] == false ){
+                                visited[ny][nx] = true;
+                                workDeque.push(new Coordinate(nx, ny));
+                            }
                         }
                     }
                 }
