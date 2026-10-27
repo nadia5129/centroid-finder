@@ -79,14 +79,12 @@ public class BinarizingImageGroupFinderTest {
         assertEquals(fakeGroups, groups);
     }
 
-    // TODO tests to write:
-    //
-    // Handoffs (use the fakes' "seen" fields)
-    // [x] the image passed in is the same one the binarizer receives
-    //     (hint: assertSame(image, binarizer.imageSeen) checks it's the exact same object)
+    // ---------- Handoffs (use the fakes' "seen" fields) ----------
+
+    // The image passed in is the exact same one the binarizer receives
     @Test
     void findConnectedGroups_passesImageToBinarizer() {
-        //Arrange
+        // Arrange
         BufferedImage image = new BufferedImage(2, 2, BufferedImage.TYPE_INT_RGB);
         FakeBinarizer binarizer = new FakeBinarizer(new int[][] {
             {1, 0},
@@ -98,16 +96,14 @@ public class BinarizingImageGroupFinderTest {
 
         // Act
         finder.findConnectedGroups(image);
-        //Assert
+        // Assert
         assertSame(image, binarizer.imageSeen);
-
     }
 
-    // [x] the grid the binarizer returns is the same one the group finder receives
-    //     (assertSame(binarizer.gridToReturn, groupFinder.gridSeen))
+    // The grid the binarizer returns is the exact same one the group finder receives
     @Test
     void findConnectedGroups_passesGridToGroupFinder() {
-        //Arrange
+        // Arrange
         BufferedImage image = new BufferedImage(2, 2, BufferedImage.TYPE_INT_RGB);
         FakeBinarizer binarizer = new FakeBinarizer(new int[][] {
             {1, 0},
@@ -119,14 +115,14 @@ public class BinarizingImageGroupFinderTest {
 
         // Act
         finder.findConnectedGroups(image);
-        //Assert
+        // Assert
         assertSame(binarizer.gridToReturn, groupFinder.gridSeen);
-
     }
-    // [x] each fake is called exactly once (timesCalled == 1)
+
+    // Each helper is called exactly once
     @Test
     void findConnectedGroups_callsEachHelperOnce() {
-        //Arrange
+        // Arrange
         BufferedImage image = new BufferedImage(2, 2, BufferedImage.TYPE_INT_RGB);
         FakeBinarizer binarizer = new FakeBinarizer(new int[][] {
             {1, 0},
@@ -138,17 +134,17 @@ public class BinarizingImageGroupFinderTest {
 
         // Act
         finder.findConnectedGroups(image);
-        //Assert
+        // Assert
         assertEquals(1, binarizer.timesCalled);
         assertEquals(1, groupFinder.timesCalled);
-
     }
-    //
-    // Results
-    // [x] group finder returns an empty list -> result is an empty list
-    @Test 
-    void findConnectedGroups_noGroupsFound_returnsEmptyList(){
-        //Arrange
+
+    // ---------- Results ----------
+
+    // Group finder returns an empty list -> result is an empty list
+    @Test
+    void findConnectedGroups_noGroupsFound_returnsEmptyList() {
+        // Arrange
         BufferedImage image = new BufferedImage(2, 2, BufferedImage.TYPE_INT_RGB);
         FakeBinarizer binarizer = new FakeBinarizer(new int[][] {
             {0, 0},
@@ -161,11 +157,11 @@ public class BinarizingImageGroupFinderTest {
         List<Group> groups = finder.findConnectedGroups(image);
 
         assertEquals(List.of(), groups);
-
     }
-    // [x] group finder returns several groups -> result has the same groups in the same order
-    @Test 
-    void findConnectedGroups_severalGroups_returnsSameGroupsInOrder(){
+
+    // Group finder returns several groups -> same groups come back in the same order
+    @Test
+    void findConnectedGroups_severalGroups_returnsSameGroupsInOrder() {
         // Arrange
         BufferedImage image = new BufferedImage(5, 3, BufferedImage.TYPE_INT_RGB);
         FakeBinarizer binarizer = new FakeBinarizer(new int[][] {
@@ -188,11 +184,10 @@ public class BinarizingImageGroupFinderTest {
         // Assert
         assertEquals(fakeGroups, groups);
     }
-    //
-    // Real pieces together (no fakes)
-    // [x] use a real DistanceImageBinarizer (with a FakeDistanceFinder-style fake or the
-    //     real EuclideanColorDistance once Wave 3 is done) and your real DfsBinaryGroupFinder.
-    //     Make a small image with setRGB, work out the groups by hand, and check them.
+
+    // ---------- Real pieces together ----------
+
+    // Real DistanceImageBinarizer + real DfsBinaryGroupFinder on a small painted image
     @Test
     void findConnectedGroups_realBinarizerAndDfs_findsCorrectGroups() {
         // Arrange

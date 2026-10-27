@@ -24,14 +24,14 @@ public class DfsBinaryGroupFinderTest {
         assertEquals(expected, groups);
     }
 
-    // TODO tests to write (x = column, y = row):
-    //
-    // Basic cases
+    // Reminder: x = column, y = row
 
-    // [x] all zeros -> empty list
-    @Test 
+    // ---------- Basic cases ----------
+
+    // All zeros -> empty list
+    @Test
     void findConnectedGroups_allZeros_returnsEmptyList() {
-        //Arrange
+        // Arrange
         int[][] image = {
             {0, 0, 0},
             {0, 0, 0},
@@ -39,39 +39,39 @@ public class DfsBinaryGroupFinderTest {
         };
         DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
 
-        //Act
+        // Act
         List<Group> groups = finder.findConnectedGroups(image);
 
-        //Assert
+        // Assert
         List<Group> expected = List.of();
         assertEquals(expected, groups);
     }
 
-    // [x] all ones -> one group covering the whole image, centroid in the middle
-    @Test 
+    // All ones -> one group covering the whole image, centroid in the middle
+    @Test
     void findConnectedGroups_allOnes_returnsCentroidInMiddle() {
-        //Arrange
+        // Arrange
         int[][] image = {
             {1, 1, 1},
             {1, 1, 1},
             {1, 1, 1}
         };
         DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
-    
-        //Act
+
+        // Act
         List<Group> groups = finder.findConnectedGroups(image);
-    
-        //Assert
+
+        // Assert
         List<Group> expected = List.of(new Group(9, new Coordinate(1, 1)));
         assertEquals(expected, groups);
     }
 
 
-    // [x] single pixel at (0, 0) -> top-left corner works
+    // Single pixel at (0, 0) -> top-left corner works
 
-    @Test 
+    @Test
     void findConnectedGroups_topLeft_returnsCentroid() {
-        //Arrange
+        // Arrange
         int[][] image = {
             {1, 0, 0},
             {0, 0, 0},
@@ -79,20 +79,20 @@ public class DfsBinaryGroupFinderTest {
         };
         DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
 
-        //Act
+        // Act
         List<Group> groups = finder.findConnectedGroups(image);
 
-        //Assert
+        // Assert
         List<Group> expected = List.of(new Group(1, new Coordinate(0, 0)));
         assertEquals(expected, groups);
     }
 
 
-    // [x] single pixel at the bottom-right corner -> edges don't go out of bounds
+    // Single pixel at the bottom-right corner -> edges don't go out of bounds
 
-    @Test 
+    @Test
     void findConnectedGroups_bottomRight_returnsCentroid() {
-        //Arrange
+        // Arrange
         int[][] image = {
             {0, 0, 0},
             {0, 0, 0},
@@ -100,56 +100,57 @@ public class DfsBinaryGroupFinderTest {
         };
         DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
 
-        //Act
+        // Act
         List<Group> groups = finder.findConnectedGroups(image);
 
-        //Assert
+        // Assert
         List<Group> expected = List.of(new Group(1, new Coordinate(2, 2)));
         assertEquals(expected, groups);
     }
 
-    // [x] 1x1 image containing a 1
+    // 1x1 image containing a 1
 
-    @Test 
+    @Test
     void findConnectedGroups_oneByOneWithOne_returnsCentroid() {
-        //Arrange
+        // Arrange
         int[][] image = {
             {1}
         };
         DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
 
-        //Act
+        // Act
         List<Group> groups = finder.findConnectedGroups(image);
 
-        //Assert
+        // Assert
         List<Group> expected = List.of(new Group(1, new Coordinate(0, 0)));
         assertEquals(expected, groups);
     }
 
-    // [x] 1x1 image containing a 0
+    // 1x1 image containing a 0
 
-    @Test 
+    @Test
     void findConnectedGroups_oneByOneWithZero_returnsEmptyList() {
-        //Arrange
+        // Arrange
         int[][] image = {
             {0}
         };
         DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
 
-        //Act
+        // Act
         List<Group> groups = finder.findConnectedGroups(image);
 
-        //Assert
+        // Assert
         List<Group> expected = List.of();
         assertEquals(expected, groups);
     }
-    //
-    // Connectivity
-    // [x] two pixels side by side (horizontal) -> one group of size 2
 
-    @Test 
+    // ---------- Connectivity ----------
+
+    // Two pixels side by side (horizontal) -> one group of size 2
+
+    @Test
     void findConnectedGroups_twoPixelsSideBySide_returnsOneGroup() {
-        //Arrange
+        // Arrange
         int[][] image = {
             {0, 0, 0},
             {1, 1, 0},
@@ -157,19 +158,19 @@ public class DfsBinaryGroupFinderTest {
         };
         DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
 
-        //Act
+        // Act
         List<Group> groups = finder.findConnectedGroups(image);
 
-        //Assert
-        List<Group> expected = List.of(new Group( 2, new Coordinate(0, 1)));
+        // Assert
+        List<Group> expected = List.of(new Group(2, new Coordinate(0, 1)));
         assertEquals(expected, groups);
     }
 
-    // [x] two pixels stacked (vertical) -> one group of size 2
+    // Two pixels stacked (vertical) -> one group of size 2
 
-    @Test 
+    @Test
     void findConnectedGroups_twoPixelsStacked_returnsOneGroup() {
-        //Arrange
+        // Arrange
         int[][] image = {
             {0, 0, 0},
             {0, 1, 0},
@@ -177,19 +178,19 @@ public class DfsBinaryGroupFinderTest {
         };
         DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
 
-        //Act
+        // Act
         List<Group> groups = finder.findConnectedGroups(image);
 
-        //Assert
-        List<Group> expected = List.of(new Group( 2, new Coordinate(1, 1)));
+        // Assert
+        List<Group> expected = List.of(new Group(2, new Coordinate(1, 1)));
         assertEquals(expected, groups);
     }
 
-    // [x] two pixels touching only diagonally -> two separate groups of size 1
+    // Two pixels touching only diagonally -> two separate groups of size 1
 
-    @Test 
+    @Test
     void findConnectedGroups_twoPixelsDiagonal_returnsTwoSeparateGroups() {
-        //Arrange
+        // Arrange
         int[][] image = {
             {0, 0, 0},
             {1, 0, 0},
@@ -197,10 +198,10 @@ public class DfsBinaryGroupFinderTest {
         };
         DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
 
-        //Act
+        // Act
         List<Group> groups = finder.findConnectedGroups(image);
 
-        //Assert
+        // Assert
         List<Group> expected = List.of(
             new Group(1, new Coordinate(1, 2)),
             new Group(1, new Coordinate(0, 1))
@@ -208,11 +209,11 @@ public class DfsBinaryGroupFinderTest {
         assertEquals(expected, groups);
     }
 
-    // [x] L-shape -> one group (DFS follows the turn)
+    // L-shape -> one group (DFS follows the turn)
 
-    @Test 
+    @Test
     void findConnectedGroups_lShaped_returnsOneGroup() {
-        //Arrange
+        // Arrange
         int[][] image = {
             {1, 0, 0},
             {1, 0, 0},
@@ -220,21 +221,21 @@ public class DfsBinaryGroupFinderTest {
         };
         DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
 
-        //Act
+        // Act
         List<Group> groups = finder.findConnectedGroups(image);
 
-        //Assert
+        // Assert
         List<Group> expected = List.of(
             new Group(4, new Coordinate(0, 1))
         );
         assertEquals(expected, groups);
     }
 
-    // [x] U-shape or snake -> one group (DFS goes back on itself)
+    // U-shape or snake -> one group (DFS goes back on itself)
 
-    @Test 
+    @Test
     void findConnectedGroups_uShaped_returnsOneGroup() {
-        //Arrange
+        // Arrange
         int[][] image = {
             {1, 0, 1},
             {1, 0, 1},
@@ -242,21 +243,21 @@ public class DfsBinaryGroupFinderTest {
         };
         DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
 
-        //Act
+        // Act
         List<Group> groups = finder.findConnectedGroups(image);
 
-        //Assert
+        // Assert
         List<Group> expected = List.of(
             new Group(7, new Coordinate(1, 1))
         );
         assertEquals(expected, groups);
     }
 
-    // [x] ring with a hole of 0s in the middle -> one group
+    // Ring with a hole of 0s in the middle -> one group
 
-    @Test 
+    @Test
     void findConnectedGroups_ringShaped_returnsOneGroup() {
-        //Arrange
+        // Arrange
         int[][] image = {
             {1, 1, 1},
             {1, 0, 1},
@@ -264,21 +265,21 @@ public class DfsBinaryGroupFinderTest {
         };
         DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
 
-        //Act
+        // Act
         List<Group> groups = finder.findConnectedGroups(image);
 
-        //Assert
+        // Assert
         List<Group> expected = List.of(
             new Group(8, new Coordinate(1, 1))
         );
         assertEquals(expected, groups);
     }
 
-    // [x] two groups separated by a column of 0s
+    // Two groups separated by a column of 0s
 
-    @Test 
+    @Test
     void findConnectedGroups_separatedByColumn_returnsTwoGroups() {
-        //Arrange
+        // Arrange
         int[][] image = {
             {1, 0, 1},
             {1, 0, 1},
@@ -286,10 +287,10 @@ public class DfsBinaryGroupFinderTest {
         };
         DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
 
-        //Act
+        // Act
         List<Group> groups = finder.findConnectedGroups(image);
 
-        //Assert
+        // Assert
         List<Group> expected = List.of(
             new Group(3, new Coordinate(2, 1)),
             new Group(3, new Coordinate(0, 1))
@@ -297,13 +298,13 @@ public class DfsBinaryGroupFinderTest {
         assertEquals(expected, groups);
     }
 
-    //
-    // Centroid math
-    // [x] centroid needs integer division (e.g. pixels at x=0 and x=1 -> x=0)
+    // ---------- Centroid math ----------
 
-    @Test 
+    // Centroid needs integer division (e.g. pixels at x=0 and x=1 -> x=0)
+
+    @Test
     void findConnectedGroups_centroidWithRemainder_usesIntegerDivision() {
-        //Arrange
+        // Arrange
         int[][] image = {
             {0, 0, 0, 0},
             {1, 1, 1, 1},
@@ -311,21 +312,21 @@ public class DfsBinaryGroupFinderTest {
         };
         DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
 
-        //Act
+        // Act
         List<Group> groups = finder.findConnectedGroups(image);
 
-        //Assert
+        // Assert
         List<Group> expected = List.of(
             new Group(4, new Coordinate(1, 1))
         );
         assertEquals(expected, groups);
     }
 
-    // [x] non-symmetric shape where you calculate the centroid by hand
+    // Non-symmetric shape where you calculate the centroid by hand
 
-    @Test 
+    @Test
     void findConnectedGroups_nonSymmetricShape_returnsCorrectCentroid() {
-        //Arrange
+        // Arrange
         int[][] image = {
             {0, 0, 0, 1},
             {1, 1, 1, 1},
@@ -333,33 +334,33 @@ public class DfsBinaryGroupFinderTest {
         };
         DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
 
-        //Act
+        // Act
         List<Group> groups = finder.findConnectedGroups(image);
 
-        //Assert
+        // Assert
         List<Group> expected = List.of(
             new Group(6, new Coordinate(2, 1))
         );
         assertEquals(expected, groups);
     }
 
-    //
-    // Image shapes
-    // [x] wide image (1 row, many columns)
+    // ---------- Image shapes ----------
 
-    @Test 
+    // Wide image (1 row, many columns)
+
+    @Test
     void findConnectedGroups_wideImage_returnsTwoGroups() {
-        //Arrange
+        // Arrange
         int[][] image = {
             {1, 1, 0, 1, 1, 1}
         };
 
         DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
 
-        //Act
+        // Act
         List<Group> groups = finder.findConnectedGroups(image);
 
-        //Assert
+        // Assert
         List<Group> expected = List.of(
             new Group(3, new Coordinate(4, 0)),
             new Group(2, new Coordinate(0, 0))
@@ -367,11 +368,11 @@ public class DfsBinaryGroupFinderTest {
         assertEquals(expected, groups);
     }
 
-    // [ ] tall image (many rows, 1 column)
+    // Tall image (many rows, 1 column)
 
-    @Test 
+    @Test
     void findConnectedGroups_tallImage_returnsTwoGroups() {
-        //Arrange
+        // Arrange
         int[][] image = {
             {1},
             {1},
@@ -382,10 +383,10 @@ public class DfsBinaryGroupFinderTest {
         };
         DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
 
-        //Act
+        // Act
         List<Group> groups = finder.findConnectedGroups(image);
 
-        //Assert
+        // Assert
         List<Group> expected = List.of(
             new Group(3, new Coordinate(0, 4)),
             new Group(2, new Coordinate(0, 0))
@@ -393,11 +394,11 @@ public class DfsBinaryGroupFinderTest {
         assertEquals(expected, groups);
     }
 
-    // [x] non-square image (e.g. 3x5) -> x and y aren't swapped
+    // Non-square image (e.g. 3x5) -> x and y aren't swapped
 
-    @Test 
+    @Test
     void findConnectedGroups_nonSquareImage_findsPixelsInFarColumns() {
-        //Arrange
+        // Arrange
         int[][] image = {
             {0, 0, 0, 0, 0},
             {0, 0, 0, 1, 1},
@@ -405,17 +406,17 @@ public class DfsBinaryGroupFinderTest {
         };
         DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
 
-        //Act
+        // Act
         List<Group> groups = finder.findConnectedGroups(image);
 
-        //Assert
+        // Assert
         List<Group> expected = List.of(new Group(3, new Coordinate(3, 1)));
         assertEquals(expected, groups);
-    }    
+    }
 
-    //
-    // Sorting (descending: size, then x, then y)
-    // [ ] groups of different sizes -> biggest first
+    // ---------- Sorting (descending: size, then x, then y) ----------
+
+    // Groups of different sizes -> biggest first
     @Test
     void findConnectedGroups_differentSizes_sortsLargestFirst() {
         // Arrange
@@ -437,7 +438,7 @@ public class DfsBinaryGroupFinderTest {
 
         assertEquals(expected, groups);
     }
-    // [ ] same size, different x -> bigger x first
+    // Same size, different x -> bigger x first
     @Test
     void findConnectedGroups_sameSize_sortsByXDescending() {
         // Arrange
@@ -455,7 +456,7 @@ public class DfsBinaryGroupFinderTest {
 
         assertEquals(expected, groups);
     }
-    // [ ] same size, same x, different y -> bigger y first
+    // Same size, same x, different y -> bigger y first
     @Test
     void findConnectedGroups_sameSizeAndX_sortsByYDescending() {
         // Arrange
@@ -475,25 +476,26 @@ public class DfsBinaryGroupFinderTest {
 
         assertEquals(expected, groups);
     }
-    //
-    // Errors
-    // [ ] null image -> NullPointerException
 
-    @Test 
+    // ---------- Errors ----------
+
+    // Null image -> NullPointerException
+
+    @Test
     void findConnectedGroups_nullImage_throwsNullPointerException() {
-        //Arrange
+        // Arrange
         int[][] image = null;
         DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
 
-        //Act + Assert
+        // Act + Assert
         assertThrows(NullPointerException.class, () -> finder.findConnectedGroups(image));
     }
 
-    // [x] one null row -> NullPointerException
+    // One null row -> NullPointerException
 
-    @Test 
+    @Test
     void findConnectedGroups_nullRow_throwsNullPointerException() {
-        //Arrange
+        // Arrange
         int[][] image = {
             {0, 1, 0},
             null,
@@ -501,49 +503,49 @@ public class DfsBinaryGroupFinderTest {
         };
         DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
 
-        //Act + Assert
+        // Act + Assert
         assertThrows(NullPointerException.class, () -> finder.findConnectedGroups(image));
     }
 
-    // [x] empty array (new int[0][0]) -> IllegalArgumentException
+    // Empty array (new int[0][0]) -> IllegalArgumentException
 
-    @Test 
+    @Test
     void findConnectedGroups_emptyArray_throwsIllegalArgumentException() {
-        //Arrange
+        // Arrange
         int[][] image = new int [0][0];
         DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
 
-        //Act + Assert
+        // Act + Assert
         assertThrows(IllegalArgumentException.class, () -> finder.findConnectedGroups(image));
     }
 
-    // [x] rows of different lengths -> IllegalArgumentException
+    // Rows of different lengths -> IllegalArgumentException
 
-    @Test 
+    @Test
     void findConnectedGroups_differentLengthRows_throwsIllegalArgumentException() {
-        //Arrange
+        // Arrange
         int[][] image = {
             {1, 0, 1, 1},
             {0, 0, 1}
         };
         DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
 
-        //Act + Assert
+        // Act + Assert
         assertThrows(IllegalArgumentException.class, () -> finder.findConnectedGroups(image));
     }
 
-    // [x] a value that isn't 0 or 1 (like 2 or -1) -> IllegalArgumentException
+    // A value that isn't 0 or 1 (like 2 or -1) -> IllegalArgumentException
 
-    @Test 
+    @Test
     void findConnectedGroups_illegalValue_throwsIllegalArgumentException() {
-        //Arrange
+        // Arrange
         int[][] image = {
             {1, 0, 2, 1},
             {0, 0, 1, 0}
         };
         DfsBinaryGroupFinder finder = new DfsBinaryGroupFinder();
 
-        //Act + Assert
+        // Act + Assert
         assertThrows(IllegalArgumentException.class, () -> finder.findConnectedGroups(image));
     }
 }
