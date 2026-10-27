@@ -143,8 +143,7 @@ CSV - a file format where rows are separated by newlines and values are separate
 
 
 //TO DO
-update gitignore 
-to ignore target directory 
+[x] update gitignore to ignore target directory
 
 
 1. Create the video branch
@@ -154,16 +153,18 @@ to ignore target directory
 [x] Have teammates fetch and switch to video
 
 2. Restructure your project for Maven
-[ ] Create or update pom.xml
-[ ] Move Java source files into src/main/java
-[ ] Move JUnit tests into src/test/java
-[ ] Set ImageSummaryApp as the main class in pom.xml
-[ ] Make sure the package names and folders match
+[x] Create or update pom.xml
+[x] Move Java source files into src/main/java
+[x] Move JUnit tests into src/test/java
+[x] Set ImageSummaryApp as the main class in pom.xml
+[x] Make sure the package names and folders match
+[x] Remove lib/ jar (Maven downloads JUnit now)
+[x] Update GitHub workflow and README to use mvn
 
 3. Test your Maven project
-[ ] Run the existing image-processing application with Maven
-[ ] Confirm binarized.png and groups.csv are generated
-[ ] Run mvn test and verify the tests pass
+[x] Run the existing image-processing application with Maven
+[x] Confirm binarized.png and groups.csv are generated
+[x] Run mvn test and verify the tests pass
 
 4. Research video-processing libraries
 [ ] Research at least three Java video libraries
