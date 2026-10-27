@@ -82,6 +82,127 @@ public class DistanceImageBinarizerTest {
         // Assert
         assertArrayEquals(new int[][] { {0} }, actual);
     }
+        
+    // One step under the line: distance 9, threshold 10 -> white.
+    @Test
+    void toBinaryArray_distanceJustUnderThreshold_returnsWhite() {
+        // Arrange
+        BufferedImage image = imageFilledWith(1, 1, 0x000009); // 9
+        DistanceImageBinarizer binarizer =
+            new DistanceImageBinarizer(new FakeDistanceFinder(), 0x000000, 10);
+
+        // Act
+        int[][] actual = binarizer.toBinaryArray(image);
+
+        // Assert
+        assertArrayEquals(new int[][] { {1} }, actual);
+    }
+
+    // With a threshold of 0, nothing can be "less than 0", so even a perfect
+    // match (distance 0) should be black.
+    @Test
+    void toBinaryArray_thresholdZero_exactMatchIsBlack() {
+        // Arrange
+        BufferedImage image = imageFilledWith(1, 1, 0x000000);
+        DistanceImageBinarizer binarizer =
+            new DistanceImageBinarizer(new FakeDistanceFinder(), 0x000000, 0);
+
+        // Act
+        int[][] actual = binarizer.toBinaryArray(image);
+
+        // Assert
+        assertArrayEquals(new int[][] { {0} }, actual);
+    }
+
+    // The picture has see-through digits at the front (0x80). Our code should
+    // wipe those off before asking the distance tool. If they leak through,
+    // the distance would be huge and the pixel would wrongly be black.
+    @Test
+    void toBinaryArray_alphaBitsAreStrippedBeforeMeasuringDistance() {
+        // Arrange
+        BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        image.setRGB(0, 0, 0x80000010);
+        FakeDistanceFinder fake = new FakeDistanceFinder();
+        DistanceImageBinarizer binarizer = new DistanceImageBinarizer(fake, 0x000020, 20);
+
+        // Act
+        int[][] actual = binarizer.toBinaryArray(image);
+
+        // Assert
+        assertTrue(fake.colorsSeen.contains(0x000010));
+        assertArrayEquals(new int[][] { {1} }, actual);
+    }
+
+    // The distance tool should be asked about the target color we gave it.
+    @Test
+    void toBinaryArray_targetColorIsPassedToDistanceFinder() {
+        // Arrange
+        BufferedImage image = imageFilledWith(1, 1, 0x000010);
+        FakeDistanceFinder fake = new FakeDistanceFinder();
+        DistanceImageBinarizer binarizer = new DistanceImageBinarizer(fake, 0x000020, 20);
+
+        // Act
+        binarizer.toBinaryArray(image);
+
+        // Assert
+        assertTrue(fake.colorsSeen.contains(0x000020));
+    }
+
+    // An image 3 wide and 2 tall should give an array with 2 rows and
+    // 3 columns ([2][3]), not the other way around.
+    @Test
+    void toBinaryArray_nonSquareImage_hasRowsByColumnsShape() {
+        // Arrange
+        BufferedImage image = imageFilledWith(3, 2, 0x000064);
+        DistanceImageBinarizer binarizer =
+            new DistanceImageBinarizer(new FakeDistanceFinder(), 0x000000, 10);
+
+        // Act
+        int[][] actual = binarizer.toBinaryArray(image);
+
+        // Assert
+        assertEquals(2, actual.length);
+        assertEquals(3, actual[0].length);
+    }
+
+    // getRGB uses (x, y) but the array uses [row][column], so each white
+    // pixel must land at [y][x].
+    @Test
+    void toBinaryArray_mixedPixels_landInCorrectRowAndColumn() {
+        // Arrange
+        BufferedImage image = imageFilledWith(3, 2, 0x000064); // far from target
+        image.setRGB(0, 0, 0x000000); // x=0, y=0 matches
+        image.setRGB(1, 1, 0x000000); // x=1, y=1 matches
+        image.setRGB(2, 1, 0x000000); // x=2, y=1 matches
+        DistanceImageBinarizer binarizer =
+            new DistanceImageBinarizer(new FakeDistanceFinder(), 0x000000, 10);
+
+        // Act
+        int[][] actual = binarizer.toBinaryArray(image);
+
+        // Assert
+        int[][] expected = {
+            {1, 0, 0},
+            {0, 1, 1}
+        };
+        assertArrayEquals(expected, actual);
+    }
+
+    // Every pixel should be measured exactly once. Each measurement records
+    // 2 colors, so 3 x 2 pixels -> 12 colors.
+    @Test
+    void toBinaryArray_distanceCalledOncePerPixel() {
+        // Arrange
+        BufferedImage image = imageFilledWith(3, 2, 0x000064);
+        FakeDistanceFinder fake = new FakeDistanceFinder();
+        DistanceImageBinarizer binarizer = new DistanceImageBinarizer(fake, 0x000000, 10);
+
+        // Act
+        binarizer.toBinaryArray(image);
+
+        // Assert
+        assertEquals(2 * 3 * 2, fake.colorsSeen.size());
+    }
 
     // ---------- toBufferedImage ----------
 
@@ -132,6 +253,7 @@ public class DistanceImageBinarizerTest {
         assertEquals(0xFFFFFF, actual.getRGB(2, 1) & 0xFFFFFF); // row 1, col 2
     }
     
+    // A grid of all 0s should make a picture where every pixel is black.
     @Test
     void toBufferedImage_allZeros_everyPixelBlack() {
         // Arrange
@@ -191,32 +313,8 @@ public class DistanceImageBinarizerTest {
         assertEquals(1, actual.getHeight());
         assertEquals(0xFFFFFF, actual.getRGB(0, 0) & 0xFFFFFF);
     }
-    // TODO tests to add (Wave 4 says MAKE SURE YOU MAKE THOROUGH UNIT TESTS):
-    //
-    // toBinaryArray: threshold edges
-    // [ ] distance exactly equal to threshold -> black (0), since the rule is "less than"
-    // [ ] distance one below threshold -> white (1)
-    // [ ] threshold of 0 -> every pixel is black, even an exact match
-    //
-    // toBinaryArray: alpha channel (README hint)
-    // [ ] image with TYPE_INT_ARGB and a pixel like 0xFF000000 -> FakeDistanceFinder's
-    //     colorsSeen should hold 0x000000, not 0xFF000000 (alpha bits stripped)
-    // [ ] the target color is what gets passed to distance() (check colorsSeen)
-    //
-    // toBinaryArray: shape and placement
-    // [ ] non-square image (e.g. 3 wide, 2 tall) -> array is [2][3], not [3][2]
-    // [ ] mixed image with white and black pixels -> each lands at [y][x]
-    //     (getRGB takes (x, y), but the array is [row][col])
-    // [ ] distance() is called once per pixel (colorsSeen size = 2 * width * height)
-    //
-    // toBufferedImage
-    // [ ] all 0s -> every pixel is black
-    // [ ] all 1s -> every pixel is white
-    // [ ] 1x1 grid works
-    //
-    // Round trip
-    // [ ] toBufferedImage(toBinaryArray(image)) gives a black-and-white version
-    //     of the image with the right pixels white
+
+    // Turn a picture into 1s and 0s, then back into a picture. Only the pixel that matched the target should end up white.he image with the right pixels white
     @Test
     void roundTrip_matchingPixelBecomesWhiteAndOthersBlack() {
         // Arrange
