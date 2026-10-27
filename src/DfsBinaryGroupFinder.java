@@ -1,3 +1,5 @@
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
 
 public class DfsBinaryGroupFinder implements BinaryGroupFinder {
@@ -53,7 +55,43 @@ public class DfsBinaryGroupFinder implements BinaryGroupFinder {
                 }
             }
         }
+
+        boolean[][] visited = new boolean[image.length][image[0].length];
+        Deque<Coordinate> workDeque = new ArrayDeque<>();
         
+            //Go through every pixel
+            for (int row = 0; row < image.length; row++){
+                for (int col = 0; col < image[row].length; col++){
+                    if (image[row][col] == 1 && visited[row][col] == false){
+                        visited[row][col] = true;
+                        workDeque.push(new Coordinate(col, row));
+                        int count = 0;
+                        int sumX = 0;
+                        int sumY = 0;
+                        while(!workDeque.isEmpty()){
+                            Coordinate currentPixel = workDeque.pop();
+                            count++;
+                            sumX += currentPixel.x();
+                            sumY += currentPixel.y();
+                            int nx = currentPixel.x() + 1;
+                            int ny = currentPixel.y();
+                            if (ny >= 0 && ny < image.length && nx >= 0 && nx < image[0].length && image[ny][nx] == 1 && visited[ny][nx] == false ){
+                                visited[ny][nx] = true;
+                                workDeque.push(new Coordinate(nx, ny));
+                            }
+
+                        }
+                    }
+                }
+            }
+
+        //when I find a 1 that hasnt been visited, it starts a new group
+
+        //run the dfs visiting every connected 1, marking each one visited and adding it to a count, x total, and y total
+
+        // when the dfs finishes create a new Group : new Group(count, new Coordinate(sumX / count, sumY / count)) and add it to your list.
+
+        //after going through every pixel, sort the list in descending order and return it....
 
         return null;
     }
