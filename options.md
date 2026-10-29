@@ -50,4 +50,4 @@ I think JCodec could be a good option for our project because we already have co
 
 
 ## Our choice
-We chose ___ because ...
+We chose JavaCV because it seems like the best option for our project. It supports more video formats than JCodec and makes it easier to extract frames and get timestamps, which we will need when tracking centroids over time. It also allows us to convert video frames into BufferedImage, so we can reuse our existing binarization and DFS code without making too many changes. Another advantage is that JavaCV uses FFmpeg, which makes video processing faster. Although it has a larger download size and requires a little more setup, we think it will be more useful for our project, especially when we start processing MP4 videos in the next assignment.
