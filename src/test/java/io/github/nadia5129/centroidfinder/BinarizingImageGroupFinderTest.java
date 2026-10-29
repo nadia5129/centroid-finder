@@ -1,3 +1,5 @@
+package io.github.nadia5129.centroidfinder;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.awt.image.BufferedImage;

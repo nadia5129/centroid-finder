@@ -1,3 +1,5 @@
+package io.github.nadia5129.centroidfinder;
+
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;

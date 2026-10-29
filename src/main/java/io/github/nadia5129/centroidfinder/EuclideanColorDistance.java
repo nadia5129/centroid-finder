@@ -1,3 +1,5 @@
+package io.github.nadia5129.centroidfinder;
+
 public class EuclideanColorDistance implements ColorDistanceFinder {
     /**
      * Returns the euclidean color distance between two hex RGB colors.
