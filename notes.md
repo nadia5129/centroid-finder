@@ -176,11 +176,11 @@ CSV - a file format where rows are separated by newlines and values are separate
 [x] Add the selected library as a dependency in pom.xml
 [x] Create a new Java class for experimenting
 [x] Use a small sample MP4 video
-[ ] Try reading video metadata (duration, dimensions, etc.)
-[ ] Try extracting video frames
-[ ] Switch libraries and experiment again if needed
+[x] Try reading video metadata (duration, dimensions, etc.)
+[x] Try extracting video frames
+[x] Switch libraries and experiment again if needed
 
 6. Submit your assignment
-[ ] Push all changes and experiments to the video branch
-[ ] Create a NEW pull request from video
-[ ] Submit the pull request URL
+[] Push all changes and experiments to the video branch
+[x] Create a NEW pull request from video
+[x] Submit the pull request URL
