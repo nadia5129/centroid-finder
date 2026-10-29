@@ -26,10 +26,19 @@
 
 ## FFmpeg via ProcessBuilder
 **Pros**
-- 
+- nothing to add to pom.xml so no giant download
+- Same FFmpeg engine as JavaCV it's fast and opens almost any video format
+- Full Control we can use any FFmpeg option
+- Useful skill that FFmpeg is a common tool
 
 **Cons**
-- 
+- Everyone must install FFmpeg themselves means if someone forgets to install their path will be incorrect
+- more code to write we would need to calculate timestamps ourselves
+- Errors are just text not Java exceptions.
+- Freeze gotcha... if it doesn't read FFmpeg's output FFmpeg can get stuck and our program will freeze.
+- saving frames as files which means very large clean ups or Streaming raw pixels instead which is faster but complicated byte by byte code
+- Commands are plain strings.. typos will only show up when it runs
+
 
 ## Our choice
 We chose ___ because ...
