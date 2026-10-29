@@ -175,7 +175,7 @@ CSV - a file format where rows are separated by newlines and values are separate
 5. Experiment with a video library
 [x] Add the selected library as a dependency in pom.xml
 [ ] Create a new Java class for experimenting
-[ ] Use a small sample MP4 video
+[x] Use a small sample MP4 video
 [ ] Try reading video metadata (duration, dimensions, etc.)
 [ ] Try extracting video frames
 [ ] Switch libraries and experiment again if needed
