@@ -44,7 +44,11 @@
         <artifactId>exec-maven-plugin</artifactId>
         <version>3.1.0</version>
         <configuration>
-          <mainClass>io.github.nadia5129.centroidfinder.ImageSummaryApp</mainClass>
+         <!-- Original main class -->
+        <!-- <mainClass>io.github.nadia5129.centroidfinder.ImageSummaryApp</mainClass> -->
+
+        <!-- Temporarily run our JavaCV experiment -->
+        <mainClass>io.github.nadia5129.centroidfinder.JavaCVExperiment</mainClass>
         </configuration>
       </plugin>
     </plugins>
