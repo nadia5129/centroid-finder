@@ -167,10 +167,10 @@ CSV - a file format where rows are separated by newlines and values are separate
 [x] Run mvn test and verify the tests pass
 
 4. Research video-processing libraries
-[ ] Research at least three Java video libraries
-[ ] Create options.md
-[ ] Write pros and cons for each in your own words
-[ ] Discuss which library to try with teammates
+[x] Research at least three Java video libraries
+[x] Create options.md
+[x] Write pros and cons for each in your own words
+[x] Discuss which library to try with teammates
 
 5. Experiment with a video library
 [ ] Add the selected library as a dependency in pom.xml
