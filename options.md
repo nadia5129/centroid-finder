@@ -19,10 +19,19 @@
 
 ## JCodec
 **Pros**
-- 
+- It is written in Java, so we don't need to install a separate native library.
+- We can add it to our project using Maven.
+- It can convert video frames into BufferedImage, which is what our centroid finder already uses.
+- It seems relatively straightforward to use for extracting individual frames.
 
 **Cons**
-- 
+- It doesn't support every video codec, so some MP4 files might not work.
+- It can be slower than libraries that use FFmpeg.
+- Processing longer videos could take more time.
+
+Thought:
+I think JCodec could be a good option for our project because we already have code that processes images using BufferedImage. If we can extract frames from a video, we should be able to reuse our existing binarization and centroid-finding code
+
 
 ## FFmpeg via ProcessBuilder
 **Pros**
