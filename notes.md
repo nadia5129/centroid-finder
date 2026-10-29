@@ -177,10 +177,15 @@ CSV - a file format where rows are separated by newlines and values are separate
 [x] Create a new Java class for experimenting
 [x] Use a small sample MP4 video
 [x] Try reading video metadata (duration, dimensions, etc.)
+<<<<<<< HEAD
 [ ] Try extracting video frames
 [ ] Switch libraries and experiment again if needed
+=======
+[x] Try extracting video frames
+[x] Switch libraries and experiment again if needed
+>>>>>>> 9a8911ecc7aeefcff08ccc235383e9a2d279230b
 
 6. Submit your assignment
-[ ] Push all changes and experiments to the video branch
-[ ] Create a NEW pull request from video
-[ ] Submit the pull request URL
+[] Push all changes and experiments to the video branch
+[x] Create a NEW pull request from video
+[x] Submit the pull request URL
