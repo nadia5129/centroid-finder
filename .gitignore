@@ -32,5 +32,9 @@ target/
 *.mkv
 
 # Output files from running the apps in the main folder (sampleOutput/ is still tracked)
-/*.csv
-/binarized.png
+processor/*.csv
+processor/binarized.png
+
+# Node
+node_modules/
+server/dist/

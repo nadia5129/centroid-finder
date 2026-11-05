@@ -1,0 +1,32 @@
+{
+  "name": "centroid-finder",
+  "version": "1.0.0",
+  "description": "AI is *NOT ALLOWED* for generating implementations of the classes. AI is allowed for helping you make test cases..",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nadia5129/centroid-finder.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/nadia5129/centroid-finder/issues"
+  },
+  "homepage": "https://github.com/nadia5129/centroid-finder#readme",
+  "dependencies": {
+    "dotenv": "^18.0.9",
+    "express": "^5.3.0",
+    "uuid": "^14.0.3"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.6",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
