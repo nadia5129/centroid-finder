@@ -51,7 +51,7 @@ This implementation will be relatively short! It will mostly be calling methods 
 MAKE SURE YOU MAKE THOROUGH UNIT TESTS. Consider asking the AI to teach you about mocks and fakes in unit testing and how they may be helpful here. I recommend NOT using any external library other than JUnit. If the AI wants to use another external library, consider asking it not to and to make stubs instead.
 
 ## Wave 6: Validation
-To validate your code is working, make sure you're in the centroid-finder directory and run the below command:
+To validate your code is working, make sure you're in the `processor` directory (`cd processor` from the centroid-finder directory) and run the below command:
 
 ```
 mvn compile
@@ -79,6 +79,11 @@ This branch will be used to add video processing capabilities to our centroid fi
 
 The video processor reads an MP4 one frame at a time and writes a CSV that tracks the largest centroid of the target color over time. Each row is `seconds,x,y`. If no centroid is found in a frame, the row is `seconds,-1,-1`. See `plan.md` for the design.
 
+All of the commands below are run from the `processor` folder:
+```
+cd processor
+```
+
 ### Build the JAR
 ```
 mvn package
@@ -104,3 +109,26 @@ mvn compile exec:java -Dexec.args="sampleInput/bright_balloon_sample_video.mp4 o
 - `outputCsv` - where to write the CSV
 - `targetColor` - the color to track, as 6 hex digits in RRGGBB format (example: `FF4500`)
 - `threshold` - how close a pixel's color must be to the target color to count, as a whole number 0 or higher
+
+## Server
+server
+This branch adds a server that takes requests to process videos and makes the results available. It implements the Salamander API by calling `videoprocessor.jar`; all of the centroid finding stays in the Java code. See `serverPlan.md` for the plan.
+
+The server uses Express with TypeScript.
+
+### Project layout
+```
+centroid-finder/
+├── .env            paths the server needs (like the videos folder and the JAR)
+├── plan.md         design of the video processor
+├── serverPlan.md   design of the server
+├── processor/      Maven Java project (the video processor)
+└── server/         Express + TypeScript server
+```
+
+### Set up the server
+After cloning or pulling, install the server's packages once (`node_modules/` is not committed):
+```
+cd server
+npm install
+```
