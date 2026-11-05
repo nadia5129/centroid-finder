@@ -1,7 +1,7 @@
 {
-  "name": "centroid-finder",
+  "name": "server",
   "version": "1.0.0",
-  "description": "AI is *NOT ALLOWED* for generating implementations of the classes. AI is allowed for helping you make test cases..",
+  "description": "Express + TypeScript server that runs videoprocessor.jar",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
