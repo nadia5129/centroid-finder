@@ -182,6 +182,11 @@ Before anyone puts the connection string in .env:
 - git rm --cached .env (because .env is already committed)
 - commit a .env.example with the names but no real values, like DATABASE_URL=
 
+### Results folder and CSV name
+- Each CSV is named after the jobId, like results/123e4567-....csv
+- Why jobId and not the video name (the API example uses intro.mp4.csv): with the video name, two jobs on the same video with different colors would overwrite each other's CSV
+- The CSV name matches the job's id in the jobs table, so it's easy to find a job's result
+
 ### What goes in .env
 - DATABASE_URL: the Neon connection string
 
