@@ -65,6 +65,15 @@ In Express you write the route as /thumbnail/:filename, with a colon instead of 
 
 
 ### Thumbnail: ffmpeg or our JAR?
+We chose ffmpeg.
+
+Speed: the frontend will probably show a thumbnail for every video. Starting our big JAR each time would take a second or more per video, and ffmpeg is almost instant.
+
+The JAR keeps one job: our JAR already does one thing (video in → CSV out). Adding a thumbnail mode would mean changing how it reads its arguments and writing more tests, just to grab one frame.
+
+Easy to install: we all have Macs with Homebrew, so it's just brew install ffmpeg. We'll add that to the README.
+
+Downside: if someone hasn't installed ffmpeg, thumbnails won't work, so the server should send a clear 500 error when that happens.
 
 
 ## Plan
