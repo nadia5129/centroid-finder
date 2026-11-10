@@ -38,3 +38,6 @@ processor/binarized.png
 # Node
 node_modules/
 server/dist/
+
+# Secrets (each person has their own .env)
+.env
