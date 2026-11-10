@@ -241,5 +241,42 @@ GET /process/{jobId}/status
 ## Testing plan
 <!-- Unit tests + Postman checks -->
 
+### Tools: Vitest + supertest
+- Vitest runs our tests. It works with TypeScript without extra setup, so it can run our .ts files directly.
+- supertest sends fake requests to our Express app, so we can test each endpoint without starting the real server.
+- They're like JUnit for our Java code: npm test in server/ works like mvn test in processor/.
+
+### Installing
+- One person installs them once, in server/:
+  npm install -D vitest supertest @types/supertest
+- -D means they're only for development (testing), not for running the server.
+- That person changes the "test" script in package.json to "vitest", then commits package.json and package-lock.json.
+
+### Does everyone need to install them?
+- Not separately. Vitest and supertest get saved in package.json.
+- Everyone else just pulls and runs npm install in server/ (we already have to do this after pulling). That installs them automatically, the same version for everyone.
+- node_modules/ isn't committed (it's in .gitignore), so each person's npm install makes their own copy.
+
+### Unit tests (automatic)
+- We test each endpoint without the real JAR or the real Neon database, using fakes like the fake FrameReader in our Java tests:
+  - a fake job store that uses a Map instead of Neon (so our test jobs don't end up in the shared database)
+  - a fake JAR runner that just remembers what it was asked to run
+- GET /api/videos: a test folder → 200 with the names; a missing folder → 500
+- POST /process: color and threshold given → 202 with a jobId; one missing → 400; the job store fails → 500
+- GET /process/:jobId/status: processing / done / error → 200 with the right JSON; unknown jobId → 404
+- When the JAR exits: code 0 → done, anything else → error
+- Test files end in .test.ts, and we run them with npm test in server/
+
+### Postman checks (by hand, real server)
+1. GET /api/videos lists our videos
+2. GET /thumbnail/bright_balloon_sample_video.mp4 shows the first frame
+3. POST /process/bright_balloon_sample_video.mp4?targetColor=FF4500&threshold=100 sends back 202 right away, not after the video is done
+4. GET /process/{jobId}/status says processing, then done
+5. The result CSV matches what the JAR makes when we run it by hand
+6. Error cases: missing color or threshold → 400, made-up jobId → 404, bad color like ZZZZZZ → the job ends as error
+
+### Who
+- Whoever builds an endpoint writes its tests
+- mvn test in processor/ should still pass
 
 
