@@ -39,6 +39,29 @@ Does it need the JAR, ffmpeg, or just files and folders?
 - We chose ffmpeg. It needs something that can open a video and grab the first frame, so the server runs one ffmpeg command instead of starting our JAR.
 
 ### POST /process/{filename}?targetColor=...&threshold=...
+What URL and method is it?
+- It's a POST because it updates the server: it creates a new job (new jobId), starts the JAR, and makes a new CSV
+- You can't start it by pasting the URL in a browser, because that always sends a GET
+
+What does the client send?
+- The video filename in the URL path (req.params.filename)
+- targetColor and threshold in the query string after the ? (req.query.targetColor, req.query.threshold)
+- The client picks the color and threshold. ff0000 and 120 on the API page are just examples
+
+What does the server send back when it works, and when it fails?
+- 202 Accepted with {"jobId": "..."}: it means "got it, working on it", not "done"
+- It sends the 202 right away, because the JAR takes about a minute and the request can't wait
+- The client uses the jobId to check on it with GET /process/{jobId}/status
+- 400 if targetColor or threshold is missing (the client's fault)
+- 500 if the server can't start the job, like a wrong JAR path (the server's fault)
+
+Does it need the JAR, ffmpeg, or just files and folders?
+- It needs the JAR, started in the background (detached, ignore stdio, unref)
+- inputPath = videos folder from .env + the filename from the URL
+- outputCsv = results folder from .env + a name the server picks (video name or jobId?)
+- targetColor and threshold come from the query string
+- It also needs the JAR's path from .env
+
 
 
 ### GET /process/{jobId}/status
