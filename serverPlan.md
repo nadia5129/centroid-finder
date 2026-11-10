@@ -23,26 +23,21 @@ What URL and method is it?
 - It's a GET because it only reads. It doesn't do anything except get the first frame of the video and show it.
 - From the client's point of view, no job starts and no file gets added (even if our server makes a temporary JPG).
 - Because it's a GET, you can paste the URL right into a browser and see the image, which is exactly what a thumbnail should do.
+- {filename} is a path parameter. The curly braces mean "a value goes here". It's part of the URL path itself, so:
+  - GET /thumbnail/intro.mp4 → filename is intro.mp4
+  - GET /thumbnail/demo.mov → filename is demo.mov
+- In Express you write the route as /thumbnail/:filename, with a colon instead of curly braces, and read it with req.params.filename.
 What does the client send?
 - The video name in the URL path, asking the server to show us the first frame of that video.
+- How it differs from /api/videos: that one has no path parameter, because it's about all the videos. This one has to say which video.
 What does the server send back when it works, and when it fails?
 - When it works it sends 200 OK with the JPEG image itself (not JSON), with the header Content-Type: image/jpeg
 - When it fails it sends a 500 error code
 - {"error": "Error generating thumbnail"}
+Does it need the JAR, ffmpeg, or just files and folders?
+- 
 
 ### POST /process/{filename}?targetColor=...&threshold=...
-{filename} is a path parameter. The curly braces mean "a value goes here". It's part of the URL path itself, so:
-
-GET /thumbnail/intro.mp4 → filename is intro.mp4
-GET /thumbnail/demo.mov → filename is demo.mov
-In Express you write the route as /thumbnail/:filename, with a colon instead of curly braces, and read it with req.params.filename.
-
-How it differs from /api/videos: that one has no path parameter, because it's about all the videos. This one has to say which video.
-
-Question 4: does it need the JAR, ffmpeg, or just files and folders?
-
-In Express you write the route as /thumbnail/:filename, with a colon instead of curly braces, and read it with req.params.filename.
-
 
 
 ### GET /process/{jobId}/status
