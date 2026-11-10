@@ -106,6 +106,7 @@ Does it need the JAR, ffmpeg, or just files and folders?
 ## Questions
 <!-- Things we don't understand yet, or want to ask the professor -->
 - The jobs are shared in Neon, but each CSV is saved on the laptop that ran the JAR. If my partner looks up my job, it says done, but their server doesn't have the file. Is that OK?
+- What should happen if someone asks for a video that doesn't exist? The spec only lists 500 for /thumbnail and 400/500 for /process.
 
 
 ## Decisions
@@ -197,4 +198,6 @@ Before anyone puts the connection string in .env:
 
 ## Testing plan
 <!-- Unit tests + Postman checks -->
+
+
 
