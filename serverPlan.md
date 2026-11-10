@@ -73,25 +73,39 @@ What does the client send?
 
 What does the server send back when it works, and when it fails?
 - 200 with "processing" the JAR is still running
-- TODO: 200 with "done" ... (what else comes back with it?)
-- TODO: 200 with "error" ... (what else comes back with it?)
-- TODO: why is a failed job still a 200 and not a 500?
+- 200 with "done" and a "result" path to the CSV
+- 200 with "error" and an error message
+- a failed job is still a 200 because the status request itself worked
 - 404: the server has never heard of that job ID.
 - 500: the server itself broke while trying to look up the job, for example it couldn't read its job storage.
 
 Does it need the JAR, ffmpeg, or just files and folders?
 - neither. The JAR was already started by POST /process.
-- TODO: so where does the status come from, and what updates it when the JAR finishes?
+- the server just looks up the job's saved status, which updates when the JAR exits (0 = done, anything else = error)
 
 
 
 
 
 ### Videos at /videos/VIDEO_NAME
+What URL and method is it?
+- It's a GET, like /videos/intro.mp4. It just gives back the video file, so the client can play it.
+- It's not one of the 4 endpoints. The spec just says every video from /api/videos can be found here.
+
+What does the client send?
+- only the video name in the URL path
+
+What does the server send back when it works, and when it fails?
+- the video file itself (not JSON)
+- if the file isn't there, a 404
+
+Does it need the JAR, ffmpeg, or just files and folders?
+- just the videos folder. We don't write a route for it, express.static shares the whole folder in one line.
 
 
 ## Questions
 <!-- Things we don't understand yet, or want to ask the professor -->
+- The jobs are shared in Neon, but each CSV is saved on the laptop that ran the JAR. If my partner looks up my job, it says done, but their server doesn't have the file. Is that OK?
 
 
 ## Decisions
@@ -101,7 +115,15 @@ Does it need the JAR, ffmpeg, or just files and folders?
 
 
 ### Tracking jobs: database or files?
+We chose a database: Neon (PostgreSQL in the cloud).
 
+Scalability: if we had lots of jobs or users, a database can search and update them safely. Files would get messy.
+
+Jobs survive a restart: if the server restarts, the jobs are still saved, so /status still works. A Map in memory would forget them.
+
+We all share one database: Neon runs in the cloud, so the 3 of us connect to the same database and nobody has to install anything.
+
+Downsides: it needs internet, the connection string is a password so it must stay out of git, and it's more to learn than a Map or files.
 
 ### Thumbnail: ffmpeg or our JAR?
 We chose ffmpeg.
@@ -117,6 +139,36 @@ Downside: if someone hasn't installed ffmpeg, thumbnails won't work, so the serv
 
 ## Plan
 <!-- How each endpoint will work, step by step. What goes in .env? Where do results go? Who is doing what? -->
+
+### Database (Neon)
+Setting it up (one person does this):
+1. Make a Neon project at neon.tech
+2. Copy the connection string (keep the ?sslmode=require at the end)
+3. Make the jobs table in Neon's SQL Editor, and save the same CREATE TABLE in server/schema.sql
+4. Send the connection string to the team privately, never on GitHub
+
+The jobs table (one row per job):
+- id: the jobId from uuid
+- filename: the video, like intro.mp4
+- targetColor and threshold: what the client sent
+- status: processing, done, or error
+- result: the path to the CSV (empty until done)
+- error: the error message (empty unless it failed)
+
+How the endpoints use it:
+- POST /process: add a row with status processing, start the JAR, send back the id
+- when the JAR exits: update the row to done (exit code 0) or error (anything else)
+- GET /process/{jobId}/status: look up the row by id, 404 if there's no row
+
+In the server: the pg package talks to Neon (npm install pg, npm install -D @types/pg)
+
+Before anyone puts the connection string in .env:
+- add .env to .gitignore
+- git rm --cached .env (because .env is already committed)
+- commit a .env.example with the names but no real values, like DATABASE_URL=
+
+### What goes in .env
+- DATABASE_URL: the Neon connection string
 
 
 ## Architecture diagram
