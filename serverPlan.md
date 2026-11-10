@@ -186,9 +186,51 @@ Before anyone puts the connection string in .env:
 - Each CSV is named after the jobId, like results/123e4567-....csv
 - Why jobId and not the video name (the API example uses intro.mp4.csv): with the video name, two jobs on the same video with different colors would overwrite each other's CSV
 - The CSV name matches the job's id in the jobs table, so it's easy to find a job's result
+- The results folder is shared with express.static at /results (like the videos), so the result column holds a URL like /results/123e4567-....csv instead of a path on our laptop
 
 ### What goes in .env
 - DATABASE_URL: the Neon connection string
+- PORT: the port the server runs on, like 3000
+- VIDEOS_DIR: the folder with the videos, like processor/sampleInput
+- RESULTS_DIR: the folder the CSVs get written to
+- JAR_PATH: where videoprocessor.jar is, like processor/target/videoprocessor.jar
+- Each of us has different paths on our laptops, so everyone has their own .env (only .env.example goes on GitHub)
+
+### Each endpoint, step by step
+GET /api/videos
+1. Read the file names in VIDEOS_DIR with fs.readdir
+2. Send back 200 with the names as a JSON array
+3. If the folder can't be read, send 500 {"error": "Error reading video directory"}
+
+GET /thumbnail/{filename}
+1. Build the video's path: VIDEOS_DIR + req.params.filename
+2. Run ffmpeg to grab the first frame as a JPEG, and have it send the image straight back to the server (no file saved)
+3. Send back 200 with the image and Content-Type: image/jpeg
+4. If ffmpeg fails (no video, or ffmpeg not installed), send 500 {"error": "Error generating thumbnail"}
+
+POST /process/{filename}?targetColor=...&threshold=...
+1. Check that targetColor and threshold are there. If not, send 400 and stop (nothing gets started)
+2. Make a jobId with uuid
+3. Add a row to the jobs table with status processing
+4. Start the JAR in the background: java -jar JAR_PATH inputPath outputCsv targetColor threshold
+   - inputPath = VIDEOS_DIR + filename, outputCsv = RESULTS_DIR + jobId.csv
+   - detached, stdio ignored, and unref, so the server doesn't wait for it
+5. Listen for the JAR's exit event. When it exits, update the row: done with the result URL (exit code 0), or error with a message (anything else)
+6. Send back 202 {"jobId": ...} right away, without waiting for step 5
+7. If adding the row or starting the JAR fails, send 500 {"error": "Error starting job"}
+- Step 5 can still happen after the 202 is sent, because the server keeps running and Node tells it when the JAR exits
+
+GET /process/{jobId}/status
+1. Look up the row by id in the jobs table
+2. No row: 404 {"error": "Job ID not found"}
+3. Send 200 with the status. Add result if it's done, or error if it failed
+4. If the database can't be reached, send 500 {"error": "Error fetching job status"}
+
+/videos/VIDEO_NAME and /results
+- express.static shares VIDEOS_DIR at /videos and RESULTS_DIR at /results. No routes to write
+
+### Who does what
+- TODO: decide as a team
 
 
 ## Architecture diagram
