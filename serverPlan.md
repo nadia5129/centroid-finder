@@ -17,6 +17,7 @@ What does the server send back when it works, and when it fails?
 Does it need the JAR, ffmpeg, or just files and folders?
 - Just a folder, the server reads the list of files in the videos folder
 - (nodes) its a specific class that node uses fs.readdir
+- it doesnt need a jar or ffmpeg, simplised end point to test 
 
 ### GET /thumbnail/{filename}
 What URL and method is it?
@@ -41,6 +42,26 @@ Does it need the JAR, ffmpeg, or just files and folders?
 
 
 ### GET /process/{jobId}/status
+What URL and method is it?
+- It's a GET, reads the information and doesn't change anything on the server
+
+What does the client send?
+- only job ID, in the URL path, it's the jobId the server returned from POST /process. there's no request body and no query string
+
+What does the server send back when it works, and when it fails?
+- 200 with "processing" the JAR is still running
+- TODO: 200 with "done" ... (what else comes back with it?)
+- TODO: 200 with "error" ... (what else comes back with it?)
+- TODO: why is a failed job still a 200 and not a 500?
+- 404: the server has never heard of that job ID.
+- 500: the server itself broke while trying to look up the job, for example it couldn't read its job storage.
+
+Does it need the JAR, ffmpeg, or just files and folders?
+- neither. The JAR was already started by POST /process.
+- TODO: so where does the status come from, and what updates it when the JAR finishes?
+
+
+
 
 
 ### Videos at /videos/VIDEO_NAME
