@@ -82,6 +82,7 @@ Does it need the JAR, ffmpeg, or just files and folders?
 
 ## Questions
 <!-- Things we don't understand yet, or want to ask the professor -->
+- The jobs are shared in Neon, but each CSV is saved on the laptop that ran the JAR. If my partner looks up my job, it says done, but their server doesn't have the file. Is that OK?
 
 
 ## Decisions
@@ -91,7 +92,15 @@ Does it need the JAR, ffmpeg, or just files and folders?
 
 
 ### Tracking jobs: database or files?
+We chose a database: Neon (PostgreSQL in the cloud).
 
+Scalability: if we had lots of jobs or users, a database can search and update them safely. Files would get messy.
+
+Jobs survive a restart: if the server restarts, the jobs are still saved, so /status still works. A Map in memory would forget them.
+
+We all share one database: Neon runs in the cloud, so the 3 of us connect to the same database and nobody has to install anything.
+
+Downsides: it needs internet, the connection string is a password so it must stay out of git, and it's more to learn than a Map or files.
 
 ### Thumbnail: ffmpeg or our JAR?
 We chose ffmpeg.
@@ -107,6 +116,36 @@ Downside: if someone hasn't installed ffmpeg, thumbnails won't work, so the serv
 
 ## Plan
 <!-- How each endpoint will work, step by step. What goes in .env? Where do results go? Who is doing what? -->
+
+### Database (Neon)
+Setting it up (one person does this):
+1. Make a Neon project at neon.tech
+2. Copy the connection string (keep the ?sslmode=require at the end)
+3. Make the jobs table in Neon's SQL Editor, and save the same CREATE TABLE in server/schema.sql
+4. Send the connection string to the team privately, never on GitHub
+
+The jobs table (one row per job):
+- id: the jobId from uuid
+- filename: the video, like intro.mp4
+- targetColor and threshold: what the client sent
+- status: processing, done, or error
+- result: the path to the CSV (empty until done)
+- error: the error message (empty unless it failed)
+
+How the endpoints use it:
+- POST /process: add a row with status processing, start the JAR, send back the id
+- when the JAR exits: update the row to done (exit code 0) or error (anything else)
+- GET /process/{jobId}/status: look up the row by id, 404 if there's no row
+
+In the server: the pg package talks to Neon (npm install pg, npm install -D @types/pg)
+
+Before anyone puts the connection string in .env:
+- add .env to .gitignore
+- git rm --cached .env (because .env is already committed)
+- commit a .env.example with the names but no real values, like DATABASE_URL=
+
+### What goes in .env
+- DATABASE_URL: the Neon connection string
 
 
 ## Architecture diagram
