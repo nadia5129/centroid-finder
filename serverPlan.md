@@ -17,6 +17,7 @@ What does the server send back when it works, and when it fails?
 Does it need the JAR, ffmpeg, or just files and folders?
 - Just a folder, the server reads the list of files in the videos folder
 - (nodes) its a specific class that node uses fs.readdir
+- it doesnt need a jar or ffmpeg, simplised end point to test 
 
 ### GET /thumbnail/{filename}
 
@@ -25,6 +26,8 @@ Does it need the JAR, ffmpeg, or just files and folders?
 
 
 ### GET /process/{jobId}/status
+
+
 
 
 ### Videos at /videos/VIDEO_NAME
