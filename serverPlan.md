@@ -231,7 +231,28 @@ GET /process/{jobId}/status
 - express.static shares VIDEOS_DIR at /videos and RESULTS_DIR at /results. No routes to write
 
 ### Who does what
-- TODO: decide as a team
+Each of us owns the endpoints we wrote notes for, and writes the unit tests and Postman checks for them.
+
+Jessica: server setup + the simple endpoints
+- Express + TypeScript starting point (index.ts, dotenv loading .env, npm scripts)
+- express.static for /videos and /results
+- GET /api/videos
+- GET /thumbnail/{filename} (ffmpeg)
+
+Nadia: database + status
+- Neon project, the jobs table, and server/schema.sql
+- The code that adds, updates, and looks up job rows (using pg)
+- GET /process/{jobId}/status
+
+Paris: processing jobs
+- POST /process/{filename} (checking the query params, making the jobId)
+- Starting the JAR in the background (detached, stdio ignored, unref)
+- Listening for the JAR's exit and marking the job done or error (using Nadia's database code)
+
+Order:
+1. Jessica's server setup goes first, since everyone's routes plug into it
+2. Nadia's database code goes before Paris's exit handling, since it updates the job rows
+3. Paris can start on the JAR part at the same time, since it doesn't need the database yet
 
 
 ## Architecture diagram
