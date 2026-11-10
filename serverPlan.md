@@ -55,15 +55,15 @@ What does the client send?
 
 What does the server send back when it works, and when it fails?
 - 200 with "processing" the JAR is still running
-- TODO: 200 with "done" ... (what else comes back with it?)
-- TODO: 200 with "error" ... (what else comes back with it?)
-- TODO: why is a failed job still a 200 and not a 500?
+- 200 with "done" and a "result" path to the CSV
+- 200 with "error" and an error message
+- a failed job is still a 200 because the status request itself worked
 - 404: the server has never heard of that job ID.
 - 500: the server itself broke while trying to look up the job, for example it couldn't read its job storage.
 
 Does it need the JAR, ffmpeg, or just files and folders?
 - neither. The JAR was already started by POST /process.
-- TODO: so where does the status come from, and what updates it when the JAR finishes?
+- the server just looks up the job's saved status, which updates when the JAR exits (0 = done, anything else = error)
 
 
 
