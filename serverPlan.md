@@ -36,7 +36,7 @@ What does the server send back when it works, and when it fails?
 - When it fails it sends a 500 error code
 - {"error": "Error generating thumbnail"}
 Does it need the JAR, ffmpeg, or just files and folders?
-- 
+- We chose ffmpeg. It needs something that can open a video and grab the first frame, so the server runs one ffmpeg command instead of starting our JAR.
 
 ### POST /process/{filename}?targetColor=...&threshold=...
 
