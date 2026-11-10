@@ -65,6 +65,19 @@ Does it need the JAR, ffmpeg, or just files and folders?
 
 
 ### Videos at /videos/VIDEO_NAME
+What URL and method is it?
+- It's a GET, like /videos/intro.mp4. It just gives back the video file, so the client can play it.
+- It's not one of the 4 endpoints. The spec just says every video from /api/videos can be found here.
+
+What does the client send?
+- only the video name in the URL path
+
+What does the server send back when it works, and when it fails?
+- the video file itself (not JSON)
+- if the file isn't there, a 404
+
+Does it need the JAR, ffmpeg, or just files and folders?
+- just the videos folder. We don't write a route for it, express.static shares the whole folder in one line.
 
 
 ## Questions
