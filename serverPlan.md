@@ -75,6 +75,21 @@ Does it need the JAR, ffmpeg, or just files and folders?
 <!-- What we chose and WHY -->
 
 ### Express + TypeScript
+Why Express
+
+- It's the default option in the assignment.
+- We've already learned it in other classes, so the team doesn't have to learn a new framework.
+- It has simple tools for everything the API needs: routes like /thumbnail/:filename, express.static for the videos and results folders, and JSON responses.
+
+Why TypeScript
+
+- We all wanted to learn TypeScript, and this project is a good chance to practice it.
+- It catches mistakes before the code runs. For example, the job status can only be "processing", "done", or "error". TypeScript warns you if someone types "finished" by mistake.
+- It's clearer. The types show what each function takes and returns.
+- It's still JavaScript underneath, so all the same Node and Express code works.
+
+The Downside 
+- TypeScript is new for all of use and will be an extra setup
 
 
 ### Tracking jobs: database or files?
