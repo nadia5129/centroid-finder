@@ -107,6 +107,7 @@ Does it need the JAR, ffmpeg, or just files and folders?
 <!-- Things we don't understand yet, or want to ask the professor -->
 - The jobs are shared in Neon, but each CSV is saved on the laptop that ran the JAR. If my partner looks up my job, it says done, but their server doesn't have the file. Is that OK?
 - What should happen if someone asks for a video that doesn't exist? The spec only lists 500 for /thumbnail and 400/500 for /process.
+- What should happen if the server stops while a JAR is running (like Ctrl+C)? The exit listener only lives in the server's memory, so after a restart nothing updates the job and it will still be marked as processing forever. Our idea: on startup, mark any jobs still processing as error ("server restarted"). The catch is that the JAR is detached, so it might still finish, and the job would say error even though the CSV is done.
 
 
 ## Decisions
