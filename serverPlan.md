@@ -258,6 +258,39 @@ Order:
 ## Architecture diagram
 <!-- Client → Express → JAR / ffmpeg / folders -->
 
+```mermaid
+graph TD
+    Client[Client]
+    Express[Express server]
+    FFmpeg[ffmpeg]
+    JAR[videoprocessor.jar]
+    DB[(Neon jobs table)]
+    VideosFolder[Videos folder]
+    ResultsFolder[Results folder]
+
+    Client -->|GET /api/videos<br/>GET /thumbnail/filename<br/>POST /process/filename<br/>GET /process/jobId/status<br/>GET /videos, /results| Express
+
+    Express -->|lists files, serves videos| VideosFolder
+    Express -->|serves CSVs| ResultsFolder
+    Express -->|grabs first frame| FFmpeg
+    FFmpeg -->|reads video| VideosFolder
+    Express -->|starts in background| JAR
+    JAR -->|reads video| VideosFolder
+    JAR -->|writes CSV| ResultsFolder
+    JAR -->|exit code| Express
+    Express -->|add / update / look up job| DB
+
+    classDef client fill:#eef2ff,stroke:#818cf8
+    classDef server fill:#f0fdfa,stroke:#2dd4bf
+    classDef worker fill:#fdf4ff,stroke:#e879f9
+    classDef storage fill:#fef2f2,stroke:#f87171
+
+    class Client client
+    class Express server
+    class JAR,FFmpeg worker
+    class VideosFolder,ResultsFolder,DB storage
+```
+
 
 ## Testing plan
 <!-- Unit tests + Postman checks -->
