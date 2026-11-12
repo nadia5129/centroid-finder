@@ -16,7 +16,7 @@ What does the server send back when it works, and when it fails?
 - {"error": "Error reading video directory"}
 Does it need the JAR, ffmpeg, or just files and folders?
 - Just a folder, the server reads the list of files in the videos folder
-- (nodes) its a specific class that node uses fs.readdir
+- (nodes) its a specific function that node uses fs.readdir
 - it doesnt need a jar or ffmpeg, simplised end point to test 
 
 ### GET /thumbnail/{filename}
@@ -58,7 +58,7 @@ What does the server send back when it works, and when it fails?
 Does it need the JAR, ffmpeg, or just files and folders?
 - It needs the JAR, started in the background (detached, ignore stdio, unref)
 - inputPath = videos folder from .env + the filename from the URL
-- outputCsv = results folder from .env + a name the server picks (video name or jobId?)
+- outputCsv = results folder from .env + the jobId, like 123e4567-....csv (see Results folder and CSV name)
 - targetColor and threshold come from the query string
 - It also needs the JAR's path from .env
 
@@ -127,7 +127,7 @@ Why TypeScript
 - It's still JavaScript underneath, so all the same Node and Express code works.
 
 The Downside 
-- TypeScript is new for all of use and will be an extra setup
+- TypeScript is new for all of us and will be an extra setup
 
 
 ### Tracking jobs: database or files?
@@ -178,10 +178,10 @@ How the endpoints use it:
 
 In the server: the pg package talks to Neon (npm install pg, npm install -D @types/pg)
 
-Before anyone puts the connection string in .env:
-- add .env to .gitignore
-- git rm --cached .env (because .env is already committed)
-- commit a .env.example with the names but no real values, like DATABASE_URL=
+Before anyone puts the connection string in .env (done):
+- add .env to .gitignore ✅
+- git rm --cached .env (because .env was already committed) ✅
+- commit a .env.example with the names but no real values, like DATABASE_URL= ✅
 
 ### Results folder and CSV name
 - Each CSV is named after the jobId, like results/123e4567-....csv
@@ -192,9 +192,10 @@ Before anyone puts the connection string in .env:
 ### What goes in .env
 - DATABASE_URL: the Neon connection string
 - PORT: the port the server runs on, like 3000
-- VIDEOS_DIR: the folder with the videos, like processor/sampleInput
+- VIDEOS_DIR: the folder with the videos, like /Users/you/centroid-finder/processor/sampleInput
 - RESULTS_DIR: the folder the CSVs get written to
-- JAR_PATH: where videoprocessor.jar is, like processor/target/videoprocessor.jar
+- JAR_PATH: where videoprocessor.jar is, like /Users/you/centroid-finder/processor/target/videoprocessor.jar
+- Use full paths: a short path like processor/sampleInput would be looked up from the folder the server starts in (server/), so it would point to the wrong place
 - Each of us has different paths on our laptops, so everyone has their own .env (only .env.example goes on GitHub)
 
 ### Each endpoint, step by step
