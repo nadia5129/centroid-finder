@@ -1,4 +1,6 @@
 import { spawn } from "node:child_process";
+import type { JobStatus } from "./types.js";
+
 
 // Builds the arguments for: java -jar <jarPath> <inputPath> <outputCsv> <targetColor> <threshold>
 // "java" itself is the command, so it's not in this list.
@@ -34,4 +36,13 @@ export function runInBackground(
 
     // lets the server stop without waiting for this program
     child.unref();
+}
+
+// Turns the JAR's exit code into the job's status.
+// 0 means the JAR finished without problems. Anything else, or null (it couldn't start), is an error.
+export function statusFromExitCode(code: number | null): JobStatus {
+    if (code === 0) {
+        return "done";
+    }
+    return "error";
 }

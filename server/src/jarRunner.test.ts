@@ -1,5 +1,5 @@
 import {describe, it, expect} from "vitest";
-import { buildJarArgs, runInBackground } from "./jarRunner.js";
+import { buildJarArgs, runInBackground, statusFromExitCode } from "./jarRunner.js";
 
 describe("buildJarArgs", () => {
     it("puts the arguments in the order the JAR expects", () => {
@@ -46,5 +46,40 @@ describe("runInBackground", () => {
 
         // Assert
         expect(code).toBeNull();
+    });
+});
+
+describe("statusFromExitCode", () => {
+    it("returns 'done' when the exit code is 0", () => {
+        // Arrange
+        const exitCode = 0;
+
+        // Act
+        const status = statusFromExitCode(exitCode);
+
+        // Assert
+        expect(status).toBe("done");
+    });
+
+    it("returns 'error' when the exit code is non-zero", () => {
+        // Arrange
+        const exitCode = 3;
+
+        // Act
+        const status = statusFromExitCode(exitCode);
+
+        // Assert
+        expect(status).toBe("error");
+    });
+
+    it("returns 'error' when the exit code is null", () => {
+        // Arrange
+        const exitCode = null;
+
+        // Act
+        const status = statusFromExitCode(exitCode);
+
+        // Assert
+        expect(status).toBe("error");
     });
 });
