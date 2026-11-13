@@ -1,5 +1,5 @@
 import {describe, it, expect} from "vitest";
-import { buildJarArgs } from "./jarRunner.js";
+import { buildJarArgs, runInBackground } from "./jarRunner.js";
 
 describe("buildJarArgs", () => {
     it("puts the arguments in the order the JAR expects", () => {
@@ -11,5 +11,40 @@ describe("buildJarArgs", () => {
 
         // Assert
         expect(args).toEqual(["-jar", jarPath, "/videos/intro.mp4", "/results/abc.csv", "ff0000", "120"]);
+    });
+});
+
+describe("runInBackground", () => {
+    it("calls onExit with 0 when the program succeeds", async () => {
+        //Arrange + Act: run a tiny node program that exits with 0,
+        // and wait until onExit is called
+        const code = await new Promise<number | null>((resolve) => {
+            runInBackground(process.execPath, ["-e", "process.exit(0)"], resolve);
+        });
+
+        // Assert
+        expect(code).toBe(0);
+    });
+
+
+    it("calls onExit with 3 when the program exits with 3", async () => {
+        //Arrange + Act: run a tiny node program that exits with 3, 
+        // and wait until onExit is called
+        const code = await new Promise<number | null>((resolve) => {
+            runInBackground(process.execPath, ["-e", "process.exit(3)"], resolve);
+        });
+
+        // Assert
+        expect(code).toBe(3);
+    });
+
+    it("calls onExit with null when the program can't start", async () => {
+        //Arrange + Act: a command that doesn't exist
+        const code = await new Promise<number | null>((resolve) => {
+            runInBackground("no-such-program", [], resolve);
+        });
+
+        // Assert
+        expect(code).toBeNull();
     });
 });
