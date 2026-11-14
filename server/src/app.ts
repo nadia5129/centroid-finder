@@ -1,3 +1,4 @@
+import fs from "fs/promises";
 import express, { type Express } from "express";
 import type { JobStore } from "./jobStore.js";
 import type { runInBackground } from "./jarRunner.js";
@@ -23,6 +24,20 @@ export function createApp(config: AppConfig): Express{
     app.use("/results", express.static(config.resultsDir));
     app.use(processRoute(config));
 
+    // GET /api/videos: list the video files in the videos folder
+    app.get("/api/videos", async (req, res) => {
+        try {
+            const files = await fs.readdir(config.videoDir);
+            const videos = files.filter((name) => {
+                const lower = name.toLowerCase();
+                return lower.endsWith(".mp4") || lower.endsWith(".mov");
+            });
+            res.json(videos);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: "Error reading video directory" });
+        }
+    });
 
     // Test route
     app.get("/", (req, res) => {
