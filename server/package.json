@@ -4,6 +4,9 @@
   "description": "Express + TypeScript server that runs videoprocessor.jar",
   "main": "index.js",
   "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
     "test": "vitest run"
   },
   "repository": {
