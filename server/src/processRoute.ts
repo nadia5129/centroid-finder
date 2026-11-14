@@ -1,3 +1,4 @@
+import path from "node:path";
 import { Router } from "express";
 import type { AppConfig } from "./app.js";
 import { startJob } from "./startJob.js";
@@ -8,7 +9,8 @@ export function processRoute(config: AppConfig): Router {
     const router = Router();
 
     router.post("/process/:filename", async (req, res) => {
-        const filename = req.params.filename;
+        // basename keeps only the file name, so "../" can't reach other folders (same as /thumbnail)
+        const filename = path.basename(req.params.filename);
         const targetColor = req.query.targetColor;
         const threshold = req.query.threshold;
 

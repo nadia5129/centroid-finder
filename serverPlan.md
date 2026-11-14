@@ -335,4 +335,34 @@ graph TD
 - Whoever builds an endpoint writes its tests
 - mvn test in processor/ should still pass
 
+### Results (what we checked so far)
+Unit tests: 26 passing with npm test in server/ (jarRunner, startJob, job store, POST /process, status route).
+
+Real server, real JAR, real Neon (sent with curl and the browser instead of Postman):
+
+| Check | Request | What we got |
+|---|---|---|
+| 1 | GET /api/videos | ["bright_balloon_sample_video.mp4","ensantina.mp4"] |
+| 2 | GET /thumbnail/ensantina.mp4 | 200, image/jpeg, the salamander's first frame |
+| 3 | POST /process/bright_balloon_sample_video.mp4?targetColor=FF4500&threshold=100 | 202 with a jobId right away |
+| 3 | POST /process/ensantina.mp4?targetColor=650010&threshold=40 | 202 with a jobId right away, even though the JAR took a few minutes |
+| 4 | GET /process/{jobId}/status for the salamander job | {"status":"done","result":"/results/<jobId>.csv"} |
+| 5 | GET /results/<jobId>.csv | the CSV, served by express.static |
+| 6 | POST /process/ensantina.mp4?threshold=40 | 400 Missing targetColor or threshold query parameter. |
+| 6 | GET /process/not-a-real-id/status | 404 Job ID not found |
+| 6 | GET /thumbnail/nope.mp4 | 500 Error generating thumbnail |
+
+The result CSVs match what the JAR makes when we run it by hand:
+- Balloon: 275 rows, from 0.000,1080,581 to 10.960,1107,597
+- Salamander: 11,477 rows (every frame), 0 missing, 0 on the top edge, 0 big jumps, and (39, 581) at 83 seconds, the same as our Wave 4 validation in plan.md
+
+Jobs survive a restart: the salamander job ran before the status route existed, and the server restarted several times after, but GET /status still said done because the job is saved in Neon.
+
+Safety: POST /process and GET /thumbnail use path.basename on the filename, so a name like ../../secret.mp4 only looks for secret.mp4 inside the videos folder.
+
+Not checked yet:
+- Seeing "processing" from GET /status while a job is still running (the status route didn't exist yet during our long run)
+- A bad color like ZZZZZZ ending as error
+- Unit tests for GET /api/videos and GET /thumbnail
+
 

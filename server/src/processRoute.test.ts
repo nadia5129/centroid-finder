@@ -71,4 +71,24 @@ describe("POST /process/:filename", () => {
         expect(response.status).toBe(500);
         expect(response.body).toEqual({ error: "Error starting job" });
     });
+
+    it("only uses the file name, so ../ can't reach files outside the videos folder", async () => {
+        // Arrange: a fake runner that remembers the arguments it was given
+        const store = new FakeJobStore();
+        let ranArgs: string[] = [];
+        const config = makeConfig(store);
+        config.run = (command: string, args: string[]) => {
+            ranArgs = args;
+        };
+        const app = createApp(config);
+
+        // Act: %2F is an encoded "/", so this filename is "../../secret.mp4"
+        const response = await request(app).post("/process/..%2F..%2Fsecret.mp4?targetColor=ff0000&threshold=120");
+
+        // Assert: the JAR was given a video inside the videos folder, and the job saved just the name
+        expect(response.status).toBe(202);
+        expect(ranArgs[2]).toBe("/videos/secret.mp4");
+        const job = await store.findJob(response.body.jobId);
+        expect(job?.filename).toBe("secret.mp4");
+    });
 });
