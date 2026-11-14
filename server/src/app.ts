@@ -1,4 +1,6 @@
 import fs from "fs/promises";
+import path from "path";
+import { execFile } from "child_process";
 import express, { type Express } from "express";
 import type { JobStore } from "./jobStore.js";
 import type { runInBackground } from "./jarRunner.js";
@@ -37,6 +39,25 @@ export function createApp(config: AppConfig): Express{
             console.error(error);
             res.status(500).json({ error: "Error reading video directory" });
         }
+    });
+
+    // GET /thumbnail/:filename: send back the video's first frame as a JPEG
+    app.get("/thumbnail/:filename", (req, res) => {
+        // basename keeps only the file name, so "../" can't reach other folders
+        const videoPath = path.join(config.videoDir, path.basename(req.params.filename));
+
+        // Ask ffmpeg for 1 frame as a JPEG, written to its output (pipe:1) instead of a file
+        const args = ["-v", "error", "-i", videoPath, "-frames:v", "1", "-f", "image2", "-c:v", "mjpeg", "pipe:1"];
+
+        execFile("ffmpeg", args, { encoding: "buffer", maxBuffer: 10 * 1024 * 1024 }, (error, stdout) => {
+            if (error) {
+                // no video, not a video, or ffmpeg isn't installed
+                console.error(error.message);
+                res.status(500).json({ error: "Error generating thumbnail" });
+                return;
+            }
+            res.type("image/jpeg").send(stdout);
+        });
     });
 
     // Test route
