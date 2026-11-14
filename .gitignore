@@ -35,6 +35,9 @@ target/
 processor/*.csv
 processor/binarized.png
 
+# Result CSVs the server makes (one per job)
+processor/results/
+
 # Node
 node_modules/
 server/dist/

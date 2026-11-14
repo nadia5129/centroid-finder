@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import type { JobStatus } from "./types.js";
+import type { JobStatus } from "./jobStore.js";
 
 
 // Builds the arguments for: java -jar <jarPath> <inputPath> <outputCsv> <targetColor> <threshold>
