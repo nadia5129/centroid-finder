@@ -2,6 +2,7 @@ import express, { type Express } from "express";
 import type { JobStore } from "./jobStore.js";
 import type { runInBackground } from "./jarRunner.js";
 import { processRoute } from "./processRoute.js";
+import {statusRoute} from "./statusRoute.js";
 
 
 // The folders the app needs. index.ts reads them from .env.
@@ -22,6 +23,7 @@ export function createApp(config: AppConfig): Express{
     app.use("/videos", express.static(config.videoDir));
     app.use("/results", express.static(config.resultsDir));
     app.use(processRoute(config));
+    app.use(statusRoute(config));
 
 
     // Test route
