@@ -351,6 +351,8 @@ Real server, real JAR, real Neon (sent with curl and the browser instead of Post
 | 6 | POST /process/ensantina.mp4?threshold=40 | 400 Missing targetColor or threshold query parameter. |
 | 6 | GET /process/not-a-real-id/status | 404 Job ID not found |
 | 6 | GET /thumbnail/nope.mp4 | 500 Error generating thumbnail |
+| 4 | GET /process/{jobId}/status right after starting a salamander job | {"status":"processing"}, then done a few minutes later |
+| 6 | POST /process/ensantina.mp4?targetColor=ZZZZZZ&threshold=40, then GET its status | 202 first, then {"status":"error","error":"Error processing video: the JAR exited with code 1"} (our Java ArgumentParser rejects the color) |
 
 The result CSVs match what the JAR makes when we run it by hand:
 - Balloon: 275 rows, from 0.000,1080,581 to 10.960,1107,597
@@ -361,8 +363,6 @@ Jobs survive a restart: the salamander job ran before the status route existed, 
 Safety: POST /process and GET /thumbnail use path.basename on the filename, so a name like ../../secret.mp4 only looks for secret.mp4 inside the videos folder.
 
 Not checked yet:
-- Seeing "processing" from GET /status while a job is still running (the status route didn't exist yet during our long run)
-- A bad color like ZZZZZZ ending as error
 - Unit tests for GET /api/videos and GET /thumbnail
 
 
