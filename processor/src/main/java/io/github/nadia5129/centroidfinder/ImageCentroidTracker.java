@@ -31,9 +31,8 @@ public class ImageCentroidTracker {
      * Finds the centroid of the largest group of matching pixels in the image.
      *
      * The first group in the list is the largest only because the group finder sorts the
-     * groups in descending order using {@link Group#compareTo(Group)}: by size, then by
-     * centroid x, then by centroid y. So if two groups have the same size, the one with the
-     * larger centroid x wins (and if x is also the same, the one with the larger y).
+     * groups in descending order using {@link Group#compareTo(Group)}, which also decides
+     * which group wins a tie.
      *
      * @param image the image (video frame) to search
      * @return the centroid of the largest group, or (-1, -1) if no pixels match.
